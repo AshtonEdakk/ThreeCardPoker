@@ -1,6 +1,7 @@
 public class Card {
     char suit;
     int value;
+    int hshshshs;
 
     // Constructor
     public Card(char suit, int value) {
