@@ -4,11 +4,17 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.MenuItem?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" styleClass="vbox" fx:controller = "welcomeController" fx:id = "root">
+<?import javafx.scene.control.TextArea?>
+
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" styleClass="vbox" fx:controller="welcomeController" fx:id="root">
 	<!--TOOD Add Nodes-->
-	
-	<Button fx:id = "helloButton" text = "hello" onAction = "#helloMethod"/>
-	<TextField fx:id = "textField" />
-	<Button fx:id = "helloButton2" text = "hello2" />
-	<Button fx:id = "hellowButton3" text = "hello3" />
+	<TextArea fx:id="gameName" text="Three Card Poker" />	
+	<Button fx:id="playButton" text="Play" onAction="#playPressed"/>
+	<MenuButton fx:id="numberOfPlayers" text="Number of Players">
+        <items>
+            <MenuItem fx:id="onePlayer" text="1 Player" onAction="#onePlayer" />
+            <MenuItem fx:id="twoPlayers" text="2 Players" onAction="#twoPlayers" />
+        </items>
+    </MenuButton>
 </Vbox>

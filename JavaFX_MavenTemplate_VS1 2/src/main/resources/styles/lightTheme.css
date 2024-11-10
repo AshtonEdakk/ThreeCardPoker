@@ -6,9 +6,16 @@
 .button{
 	-fx-font-size: 14px;
 	-fx-font-weight: bold;
-	-fx-background-color: green;
+	-fx-background-color: palegreen;
+}
+
+.text-area{
+	-fx-font-size: 14px;
+	-fx-text-fill: black; /* Text color */
+	-fx-background-color: transparent; /* Background color */
+	-fx-border-width: 0px;
 }
 
 .vbox{
-	-fx-background-color: silver;
+	-fx-background-color: ghostwhite;
 }

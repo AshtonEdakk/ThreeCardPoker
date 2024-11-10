@@ -1,1 +1,22 @@
 /*neon theme*/
+.root{
+	-fx-font-family: "Comic Sans MS";
+}
+
+.button{
+	-fx-font-size: 14px;
+	-fx-font-weight: bold;
+	-fx-background-color: magenta
+;
+}
+
+.text-area{
+	-fx-font-size: 14px;
+	-fx-text-fill: ghostwhite; /* Text color */
+	-fx-background-color: transparent; /* Background color */
+	-fx-border-width: 0px;
+}
+
+.vbox{
+	-fx-background-color: turquoise;
+}

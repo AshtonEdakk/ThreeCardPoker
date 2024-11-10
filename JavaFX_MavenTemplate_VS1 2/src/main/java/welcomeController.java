@@ -15,4 +15,14 @@ public class welcomeController implements Initializable{
 	@FXML
 	private TextField putText;
 	
+	
+	public void playPressed(ActionEvent e) throws IOException{
+		FXMLLoader loader = new FXMLLoader(getClass().getResources("/FXML/gameplayScreen.fxml"));
+		Parent root2 = loader.load(); //load view into parent;
+		gameplayController myctr = loader.getController();
+		
+		root2.getStylesheets().add("/styles/lightMode.css");
+		root.getScene().setRoot(root2);
+	}
+	
 }

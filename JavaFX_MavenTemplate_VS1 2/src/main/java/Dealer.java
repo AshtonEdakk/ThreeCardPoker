@@ -17,7 +17,7 @@ public class Dealer {
 
         ArrayList<Card> hand = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            hand.add(theDeck.remove(0));
+        	hand.add(theDeck.remove(0));
         }
         return hand;
     }

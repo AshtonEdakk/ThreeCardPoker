@@ -1,1 +1,21 @@
 /*dark theme*/
+.root{
+	-fx-font-family: "Lucida Console";
+}
+
+.button{
+	-fx-font-size: 14px;
+	-fx-font-weight: bold;
+	-fx-background-color: slategrey;
+}
+
+.text-area{
+	-fx-font-size: 14px;
+	-fx-text-fill: ghostwhite; /* Text color */
+	-fx-background-color: transparent; /* Background color */
+	-fx-border-width: 0px;
+}
+
+.vbox{
+	-fx-background-color: dimgrey;
+}
