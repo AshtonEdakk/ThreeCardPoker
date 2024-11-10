@@ -1,0 +1,20 @@
+<!--the fxml file for the welcome screeen-->
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
+
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" styleClass="vbox" fx:controller="welcomeController" fx:id="root">
+	<!--TOOD Add Nodes-->
+	<TextArea fx:id="gameName" text="Three Card Poker" />	
+	<Button fx:id="playButton" text="Play" onAction="#playPressed"/>
+	<MenuButton fx:id="numberOfPlayers" text="Number of Players">
+        <items>
+            <MenuItem fx:id="onePlayer" text="1 Player" onAction="#onePlayer" />
+            <MenuItem fx:id="twoPlayers" text="2 Players" onAction="#twoPlayers" />
+        </items>
+    </MenuButton>
+</Vbox>

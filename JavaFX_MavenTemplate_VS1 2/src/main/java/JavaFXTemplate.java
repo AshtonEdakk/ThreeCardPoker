@@ -11,7 +11,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 
 public class JavaFXTemplate extends Application {
 
@@ -28,12 +29,12 @@ public class JavaFXTemplate extends Application {
 			Parent root = FXMLLoader.load(getClass().getResource("/FXML/welcomeScreen.fxml"));
 			primaryStage.setTitle("3 Card Poker");
 			Scene s1 = new Scene(root, 500, 500);
-			s1.getStyleSheets().add("/styles/lightMode.css");
+			s1.getStylesheets().add("/styles/lightMode.css");
 			primaryStage.setScene(s1);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
-			System.exit(1);
+			System.exit(10000);
 		}
 	}
 }
