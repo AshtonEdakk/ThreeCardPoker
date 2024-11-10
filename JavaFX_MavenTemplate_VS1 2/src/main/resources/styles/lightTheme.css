@@ -1,1 +1,14 @@
 /*light theme*/
+.root{
+	-fx-font-family: "Lucida Console";
+}
+
+.button{
+	-fx-font-size: 14px;
+	-fx-font-weight: bold;
+	-fx-background-color: green;
+}
+
+.vbox{
+	-fx-background-color: silver;
+}
