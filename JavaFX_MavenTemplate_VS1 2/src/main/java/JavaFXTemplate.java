@@ -34,7 +34,7 @@ public class JavaFXTemplate extends Application {
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
-			System.exit(10000);
+			System.exit(1);
 		}
 	}
 }
