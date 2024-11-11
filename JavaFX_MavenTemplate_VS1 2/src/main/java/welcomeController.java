@@ -1,68 +1,97 @@
 import java.io.IOException;
-import java.util.List;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.application.Platform;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import java.util.ArrayList;
-import java.util.List;
-import java.lang.String;
 
 public class welcomeController {
-	@FXML
-	private VBox root;
-	
-	@FXML
-	private Label gameName;
-	
-	@FXML
-	private Button playButton;
-	
-	@FXML
-	private Button exitButton; 
-	
-	private static int index = 0;
 
-	private List<String> themes = Arrays.asList("/styles/lightTheme.css", "/styles/darkTheme.css", "/styles/neonTheme.css");
+    @FXML
+    private VBox root;
+
+    @FXML
+    private Label gameName;
+
+    @FXML
+    private Button playButton;
+
+    @FXML
+    private Button exitButton;
+
+    @FXML
+    private MenuButton numberOfPlayers;
+
+    @FXML
+    private MenuItem onePlayer;
+
+    @FXML
+    private MenuItem twoPlayers;
+
+    @FXML
+    private Button styleButton;
+
+    private static int index = 0;
+
+    private String[] themes = {
+        "/styles/lightTheme.css",
+        "/styles/darkTheme.css",
+        "/styles/neonTheme.css"
+    };
+
+    private int selectedNumberOfPlayers = 1; // Default to 1 player
+
+    @FXML
+    private void initialize() {
+        // Set initial style
+        root.getStylesheets().add(getClass().getResource(themes[index]).toExternalForm());
+    }
 
     @FXML
     private void playPressed(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("gameplayScreen.fxml"));
         Parent root2 = loader.load();
-        root2.getStylesheets().add("/styles/style2.css");//set style
         gameplayController myctr = loader.getController();
-        root.getScene().setRoot(root2);
+
+        // Pass the selected number of players to the gameplayController
+        if (selectedNumberOfPlayers == 1) {
+            myctr.setOnePlayerMode();
+        } else {
+            myctr.setTwoPlayerMode();
+        }
+
+        // Apply the selected theme to the gameplay screen
+        Scene scene = new Scene(root2);
+        scene.getStylesheets().add(getClass().getResource(themes[index]).toExternalForm());
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.setScene(scene);
     }
 
     @FXML
     private void handleExit(ActionEvent event) {
         Platform.exit();
     }
-    
+
     @FXML
     private void handleStyleSwitch(ActionEvent event) {
-    	private List<String> themes = Arrays.asList("/styles/lightTheme.css", "/styles/darkTheme.css", "/styles/neonTheme.css");
-
-    	index = (index + 1) % themes.size();
+        index = (index + 1) % themes.length;
         root.getStylesheets().clear();
-        root.getStylesheets().add(themes.get(index))
+        root.getStylesheets().add(getClass().getResource(themes[index]).toExternalForm());
     }
-    
+
     @FXML
     private void onePlayer(ActionEvent event) {
-        // Implement logic for one player mode
+        selectedNumberOfPlayers = 1;
+        numberOfPlayers.setText("1 Player");
     }
 
     @FXML
     private void twoPlayers(ActionEvent event) {
-        // Implement logic for two players mode
+        selectedNumberOfPlayers = 2;
+        numberOfPlayers.setText("2 Players");
     }
 }

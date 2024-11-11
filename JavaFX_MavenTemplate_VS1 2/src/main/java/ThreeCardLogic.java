@@ -65,6 +65,11 @@ public class ThreeCardLogic {
         int v3 = hand.get(2).getValue();
         return v1 == v2 || v1 == v3 || v2 == v3;
     }
+    
+    public static boolean dealerQualifies(ArrayList<Card> hand) {
+        int highestValue = getHighCardValue(hand);
+        return highestValue >= 12; // 12 represents Queen
+    }
 
     public static int evalPPWinnings(ArrayList<Card> hand, int bet) {
         int handValue = evalHand(hand);
@@ -112,9 +117,6 @@ public class ThreeCardLogic {
         int high = 0;
         for (Card card : hand) {
             int value = card.getValue();
-            if (value == 14) { // Ace is high
-                return 14;
-            }
             if (value > high) {
                 high = value;
             }

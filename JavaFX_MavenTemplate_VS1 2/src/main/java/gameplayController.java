@@ -1,41 +1,23 @@
-//controller for gameplay
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.scene.Node;
-
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.image.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class gameplayController {
 
-    // Game Objects
+    // Game objects
     private Player playerOne;
     private Player playerTwo;
     private Dealer theDealer;
 
-    // Game State
-    private enum GameState {
-        PLACING_BETS,
-        DEALING_CARDS,
-        PLAYER_DECISION,
-        REVEAL_DEALER,
-        ROUND_END
-    }
-    private GameState currentState = GameState.PLACING_BETS;
-
-    // Theme Management
-    private int themeIndex = 0;
-    private List<String> themes = new ArrayList<>();
+    private boolean isOnePlayerMode = false;
+    private boolean playerOneFolded = false;
+    private boolean playerTwoFolded = false;
 
     // FXML Components
-    @FXML private MenuBar menuBar;
-
     @FXML private HBox dealerHandPane;
     @FXML private HBox playerOneHandPane;
     @FXML private HBox playerTwoHandPane;
@@ -53,16 +35,19 @@ public class gameplayController {
     @FXML private Button playFoldButtonPlayerTwo;
 
     @FXML private TextArea gameInfoArea;
-
     @FXML private Button dealCardsButton;
     @FXML private Button revealDealerButton;
     @FXML private Button continueButton;
 
-    // Player decisions
-    private boolean playerOneFolded = false;
-    private boolean playerTwoFolded = false;
-    private boolean playerOneDecisionMade = false;
-    private boolean playerTwoDecisionMade = false;
+    @FXML private MenuBar menuBar;
+
+    // Style switching variables
+    private int styleIndex = 0;
+    private String[] themes = {
+        "/styles/lightTheme.css",
+        "/styles/darkTheme.css",
+        "/styles/neonTheme.css"
+    };
 
     // Initialization
     @FXML
@@ -70,31 +55,39 @@ public class gameplayController {
         playerOne = new Player();
         playerTwo = new Player();
         theDealer = new Dealer();
-
-        // Initialize themes
-        themes.add(getClass().getResource("/styles/lightMode.css").toExternalForm());
-        themes.add(getClass().getResource("/styles/darkMode.css").toExternalForm());
-        themes.add(getClass().getResource("/styles/neonMode.css").toExternalForm());
-
         updateGameInfo("Welcome to Three Card Poker! Place your bets to start.");
-
-        // Initialize button states
-        placeBetsButtonPlayerOne.setDisable(false);
-        placeBetsButtonPlayerTwo.setDisable(false);
-        dealCardsButton.setDisable(true);
-        playFoldButtonPlayerOne.setDisable(true);
-        playFoldButtonPlayerTwo.setDisable(true);
-        revealDealerButton.setDisable(true);
-        continueButton.setDisable(true);
+        resetButtons();
     }
 
-    // Event Handlers
+    public void setOnePlayerMode() {
+        isOnePlayerMode = true;
+        playerTwoHandPane.setVisible(false);
+        placeBetsButtonPlayerTwo.setVisible(false);
+        playFoldButtonPlayerTwo.setVisible(false);
+        playerTwoAnteBet.setVisible(false);
+        playerTwoPairPlusBet.setVisible(false);
+        playerTwoWinnings.setVisible(false);
+        playerTwoAnteBet.setDisable(true);
+        playerTwoPairPlusBet.setDisable(true);
+        placeBetsButtonPlayerTwo.setDisable(true);
+        playFoldButtonPlayerTwo.setDisable(true);
+    }
+
+    public void setTwoPlayerMode() {
+        isOnePlayerMode = false;
+        playerTwoHandPane.setVisible(true);
+        placeBetsButtonPlayerTwo.setVisible(true);
+        playFoldButtonPlayerTwo.setVisible(true);
+        playerTwoAnteBet.setVisible(true);
+        playerTwoPairPlusBet.setVisible(true);
+        playerTwoWinnings.setVisible(true);
+        playerTwoAnteBet.setDisable(false);
+        playerTwoPairPlusBet.setDisable(false);
+        placeBetsButtonPlayerTwo.setDisable(false);
+    }
+
     @FXML
     private void handlePlaceBetsPlayerOne(ActionEvent event) {
-        if (currentState != GameState.PLACING_BETS) {
-            showAlert("Action Not Allowed", "You cannot place bets at this time.");
-            return;
-        }
         try {
             int anteBet = Integer.parseInt(playerOneAnteBet.getText());
             int pairPlusBet = Integer.parseInt(playerOnePairPlusBet.getText());
@@ -103,6 +96,8 @@ public class gameplayController {
                 playerOne.pairPlusBet = pairPlusBet;
                 updateGameInfo("Player One has placed bets.");
                 placeBetsButtonPlayerOne.setDisable(true);
+                playerOneAnteBet.setDisable(true);
+                playerOnePairPlusBet.setDisable(true);
                 if (bothPlayersPlacedBets()) {
                     dealCardsButton.setDisable(false);
                 }
@@ -116,10 +111,6 @@ public class gameplayController {
 
     @FXML
     private void handlePlaceBetsPlayerTwo(ActionEvent event) {
-        if (currentState != GameState.PLACING_BETS) {
-            showAlert("Action Not Allowed", "You cannot place bets at this time.");
-            return;
-        }
         try {
             int anteBet = Integer.parseInt(playerTwoAnteBet.getText());
             int pairPlusBet = Integer.parseInt(playerTwoPairPlusBet.getText());
@@ -128,6 +119,8 @@ public class gameplayController {
                 playerTwo.pairPlusBet = pairPlusBet;
                 updateGameInfo("Player Two has placed bets.");
                 placeBetsButtonPlayerTwo.setDisable(true);
+                playerTwoAnteBet.setDisable(true);
+                playerTwoPairPlusBet.setDisable(true);
                 if (bothPlayersPlacedBets()) {
                     dealCardsButton.setDisable(false);
                 }
@@ -141,123 +134,72 @@ public class gameplayController {
 
     @FXML
     private void handleDealCards(ActionEvent event) {
-        if (currentState != GameState.PLACING_BETS) {
-            showAlert("Action Not Allowed", "You cannot deal cards at this time.");
-            return;
+        if (theDealer.theDeck.size() <= 34) {
+            theDealer.theDeck.newDeck();
+            updateGameInfo("Deck reshuffled.");
         }
-        // Deal hands
+
         playerOne.hand = theDealer.dealHand();
-        playerTwo.hand = theDealer.dealHand();
-        theDealer.dealersHand = theDealer.dealHand();
-
-        // Display hands
         displayHand(playerOneHandPane, playerOne.hand, false);
-        displayHand(playerTwoHandPane, playerTwo.hand, false);
-        displayHand(dealerHandPane, theDealer.dealersHand, true); // Hide dealer's cards
 
-        currentState = GameState.PLAYER_DECISION;
-        updateGameInfo("Cards have been dealt. Players decide to Play or Fold.");
+        if (!isOnePlayerMode) {
+            playerTwo.hand = theDealer.dealHand();
+            displayHand(playerTwoHandPane, playerTwo.hand, false);
+        }
 
-        // Enable Play/Fold buttons
+        theDealer.dealersHand = theDealer.dealHand();
+        displayHand(dealerHandPane, theDealer.dealersHand, true); // Hide dealer's hand
+
         playFoldButtonPlayerOne.setDisable(false);
-        playFoldButtonPlayerTwo.setDisable(false);
+        if (!isOnePlayerMode) {
+            playFoldButtonPlayerTwo.setDisable(false);
+        }
+
         dealCardsButton.setDisable(true);
     }
 
     @FXML
     private void handlePlayOrFoldPlayerOne(ActionEvent event) {
-        if (currentState != GameState.PLAYER_DECISION) {
-            showAlert("Action Not Allowed", "You cannot decide to Play or Fold at this time.");
-            return;
-        }
-        // Prompt the player to choose to Play or Fold
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Player One Decision");
-        alert.setHeaderText("Do you want to Play or Fold?");
-        alert.setContentText("Choose your option.");
-
-        ButtonType buttonTypePlay = new ButtonType("Play");
-        ButtonType buttonTypeFold = new ButtonType("Fold", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        alert.getButtonTypes().setAll(buttonTypePlay, buttonTypeFold);
-
-        ButtonType result = alert.showAndWait().orElse(buttonTypeFold);
-
-        if (result == buttonTypePlay) {
+        boolean play = getPlayOrFoldDecision("Player One");
+        playerOneFolded = !play;
+        if (play) {
             playerOne.playBet = playerOne.anteBet;
             updateGameInfo("Player One chooses to Play.");
-            playerOneFolded = false;
         } else {
             updateGameInfo("Player One chooses to Fold.");
-            playerOneFolded = true;
         }
-        playerOneDecisionMade = true;
         playFoldButtonPlayerOne.setDisable(true);
-        if (playerDecisionsMade()) {
+        if (allDecisionsMade()) {
             revealDealerButton.setDisable(false);
-            currentState = GameState.REVEAL_DEALER;
         }
     }
 
     @FXML
     private void handlePlayOrFoldPlayerTwo(ActionEvent event) {
-        if (currentState != GameState.PLAYER_DECISION) {
-            showAlert("Action Not Allowed", "You cannot decide to Play or Fold at this time.");
-            return;
-        }
-        // Prompt the player to choose to Play or Fold
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Player Two Decision");
-        alert.setHeaderText("Do you want to Play or Fold?");
-        alert.setContentText("Choose your option.");
-
-        ButtonType buttonTypePlay = new ButtonType("Play");
-        ButtonType buttonTypeFold = new ButtonType("Fold", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        alert.getButtonTypes().setAll(buttonTypePlay, buttonTypeFold);
-
-        ButtonType result = alert.showAndWait().orElse(buttonTypeFold);
-
-        if (result == buttonTypePlay) {
+        boolean play = getPlayOrFoldDecision("Player Two");
+        playerTwoFolded = !play;
+        if (play) {
             playerTwo.playBet = playerTwo.anteBet;
             updateGameInfo("Player Two chooses to Play.");
-            playerTwoFolded = false;
         } else {
             updateGameInfo("Player Two chooses to Fold.");
-            playerTwoFolded = true;
         }
-        playerTwoDecisionMade = true;
         playFoldButtonPlayerTwo.setDisable(true);
-        if (playerDecisionsMade()) {
+        if (allDecisionsMade()) {
             revealDealerButton.setDisable(false);
-            currentState = GameState.REVEAL_DEALER;
         }
     }
 
     @FXML
     private void handleRevealDealerHand(ActionEvent event) {
-        if (currentState != GameState.REVEAL_DEALER) {
-            showAlert("Action Not Allowed", "You cannot reveal the dealer's hand at this time.");
-            return;
-        }
-
-        // Reveal dealer's hand
         displayHand(dealerHandPane, theDealer.dealersHand, false);
-
-        // Evaluate hands and update winnings
         evaluateHands();
-
-        currentState = GameState.ROUND_END;
         revealDealerButton.setDisable(true);
         continueButton.setDisable(false);
     }
 
     @FXML
     private void handleContinue(ActionEvent event) {
-        if (currentState != GameState.ROUND_END) {
-            showAlert("Action Not Allowed", "You cannot continue at this time.");
-            return;
-        }
         resetRound();
     }
 
@@ -274,10 +216,10 @@ public class gameplayController {
 
     @FXML
     private void handleNewLook(ActionEvent event) {
+        styleIndex = (styleIndex + 1) % themes.length;
         Scene scene = menuBar.getScene();
-        themeIndex = (themeIndex + 1) % themes.size();
         scene.getStylesheets().clear();
-        scene.getStylesheets().add(themes.get(themeIndex));
+        scene.getStylesheets().add(getClass().getResource(themes[styleIndex]).toExternalForm());
     }
 
     @FXML
@@ -287,14 +229,33 @@ public class gameplayController {
         alert.setTitle("Exit Game");
         alert.setHeaderText("Do you really want to exit?");
         alert.setContentText("Your current progress will be lost.");
-
         if (alert.showAndWait().get() == ButtonType.OK) {
-            Stage stage = (Stage) menuBar.getScene().getWindow();
-            stage.close();
+            System.exit(0);
         }
     }
 
     // Helper Methods
+
+    private boolean isValidBet(int bet) {
+        return bet >= 5 && bet <= 25;
+    }
+
+    private boolean bothPlayersPlacedBets() {
+        if (isOnePlayerMode) {
+            return playerOne.anteBet > 0;
+        } else {
+            return playerOne.anteBet > 0 && playerTwo.anteBet > 0;
+        }
+    }
+
+    private boolean allDecisionsMade() {
+        if (isOnePlayerMode) {
+            return playFoldButtonPlayerOne.isDisabled();
+        } else {
+            return playFoldButtonPlayerOne.isDisabled() && playFoldButtonPlayerTwo.isDisabled();
+        }
+    }
+
     private void displayHand(HBox handPane, ArrayList<Card> hand, boolean hideCards) {
         handPane.getChildren().clear();
         for (Card card : hand) {
@@ -302,8 +263,8 @@ public class gameplayController {
             if (hideCards) {
                 cardView = new ImageView(new Image(getClass().getResourceAsStream("/cards/back.png")));
             } else {
-                String imagePath = "/cards/" + card.getSuit() + card.getValue() + ".png";
-                cardView = new ImageView(new Image(getClass().getResourceAsStream(imagePath)));
+                String cardFileName = getCardFileName(card);
+                cardView = new ImageView(new Image(getClass().getResourceAsStream("/cards/" + cardFileName)));
             }
             cardView.setFitWidth(75);
             cardView.setFitHeight(100);
@@ -311,8 +272,25 @@ public class gameplayController {
         }
     }
 
-    private boolean isValidBet(int bet) {
-        return bet >= 5 && bet <= 25;
+    private String getCardFileName(Card card) {
+        String valueStr;
+        switch (card.getValue()) {
+            case 11:
+                valueStr = "J";
+                break;
+            case 12:
+                valueStr = "Q";
+                break;
+            case 13:
+                valueStr = "K";
+                break;
+            case 14:
+                valueStr = "A";
+                break;
+            default:
+                valueStr = String.valueOf(card.getValue());
+        }
+        return valueStr + card.getSuit() + ".png";
     }
 
     private void updateGameInfo(String message) {
@@ -327,148 +305,76 @@ public class gameplayController {
         alert.showAndWait();
     }
 
+    private boolean getPlayOrFoldDecision(String playerName) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(playerName + " Decision");
+        alert.setHeaderText("Do you want to Play or Fold?");
+        alert.setContentText("Choose your option.");
+        ButtonType buttonTypePlay = new ButtonType("Play");
+        ButtonType buttonTypeFold = new ButtonType("Fold", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(buttonTypePlay, buttonTypeFold);
+        ButtonType result = alert.showAndWait().orElse(buttonTypeFold);
+        return result == buttonTypePlay;
+    }
+
     private void evaluateHands() {
-        int dealerHandValue = ThreeCardLogic.evalHand(theDealer.dealersHand);
-        int dealerHighCard = ThreeCardLogic.getHighCardValue(theDealer.dealersHand);
+        boolean dealerQualifies = ThreeCardLogic.dealerQualifies(theDealer.dealersHand);
+        updateGameInfo("Dealer's hand: " + handToString(theDealer.dealersHand));
 
-        updateGameInfo("Dealer's hand is: " + handToString(theDealer.dealersHand));
-
-        // Check if dealer has at least Queen high
-        boolean dealerQualifies = dealerHighCard >= 12; // Queen is 12
-
-        if (!dealerQualifies) {
-            updateGameInfo("Dealer does not have at least Queen high; play wagers are returned.");
-            if (!playerOneFolded) {
-                playerOne.totalWinnings += playerOne.playBet;
-                updateGameInfo("Player One's play wager is returned.");
-            }
-            if (!playerTwoFolded) {
-                playerTwo.totalWinnings += playerTwo.playBet;
-                updateGameInfo("Player Two's play wager is returned.");
-            }
-        }
-
-        // Evaluate Player One
+        // Player One evaluation
         if (!playerOneFolded) {
-            // Evaluate Pair Plus
-            int ppWinnings = ThreeCardLogic.evalPPWinnings(playerOne.hand, playerOne.pairPlusBet);
-            if (ppWinnings > 0) {
-                playerOne.totalWinnings += ppWinnings;
-                updateGameInfo("Player One wins Pair Plus: $" + ppWinnings);
-            } else {
-                playerOne.totalWinnings -= playerOne.pairPlusBet;
-                updateGameInfo("Player One loses Pair Plus.");
-            }
-
-            if (dealerQualifies) {
-                int compareResult = ThreeCardLogic.compareHands(theDealer.dealersHand, playerOne.hand);
-                if (compareResult == 2) { // Player wins
-                    int winnings = playerOne.anteBet + playerOne.playBet;
-                    playerOne.totalWinnings += winnings * 2;
-                    updateGameInfo("Player One beats dealer and wins: $" + winnings * 2);
-                } else if (compareResult == 1) { // Dealer wins
-                    playerOne.totalWinnings -= playerOne.anteBet + playerOne.playBet;
-                    updateGameInfo("Player One loses to dealer.");
-                } else { // Tie
-                    updateGameInfo("Player One ties with dealer.");
-                }
-            } else {
-                // Ante bet is pushed
-                updateGameInfo("Player One's ante bet is pushed.");
-            }
-            playerOneWinnings.setText("$" + playerOne.totalWinnings);
+            evaluatePlayerHand(playerOne, "Player One", dealerQualifies);
         } else {
-            // Player One folded, loses ante and pair plus bets
-            playerOne.totalWinnings -= playerOne.anteBet + playerOne.pairPlusBet;
             updateGameInfo("Player One folded and loses ante and pair plus bets.");
+            playerOne.totalWinnings -= playerOne.anteBet + playerOne.pairPlusBet;
             playerOneWinnings.setText("$" + playerOne.totalWinnings);
         }
 
-        // Evaluate Player Two
-        if (!playerTwoFolded) {
-            // Evaluate Pair Plus
-            int ppWinnings = ThreeCardLogic.evalPPWinnings(playerTwo.hand, playerTwo.pairPlusBet);
-            if (ppWinnings > 0) {
-                playerTwo.totalWinnings += ppWinnings;
-                updateGameInfo("Player Two wins Pair Plus: $" + ppWinnings);
+        // Player Two evaluation
+        if (!isOnePlayerMode) {
+            if (!playerTwoFolded) {
+                evaluatePlayerHand(playerTwo, "Player Two", dealerQualifies);
             } else {
-                playerTwo.totalWinnings -= playerTwo.pairPlusBet;
-                updateGameInfo("Player Two loses Pair Plus.");
+                updateGameInfo("Player Two folded and loses ante and pair plus bets.");
+                playerTwo.totalWinnings -= playerTwo.anteBet + playerTwo.pairPlusBet;
+                playerTwoWinnings.setText("$" + playerTwo.totalWinnings);
             }
+        }
+    }
 
-            if (dealerQualifies) {
-                int compareResult = ThreeCardLogic.compareHands(theDealer.dealersHand, playerTwo.hand);
-                if (compareResult == 2) { // Player wins
-                    int winnings = playerTwo.anteBet + playerTwo.playBet;
-                    playerTwo.totalWinnings += winnings * 2;
-                    updateGameInfo("Player Two beats dealer and wins: $" + winnings * 2);
-                } else if (compareResult == 1) { // Dealer wins
-                    playerTwo.totalWinnings -= playerTwo.anteBet + playerTwo.playBet;
-                    updateGameInfo("Player Two loses to dealer.");
-                } else { // Tie
-                    updateGameInfo("Player Two ties with dealer.");
-                }
-            } else {
-                // Ante bet is pushed
-                updateGameInfo("Player Two's ante bet is pushed.");
-            }
-            playerTwoWinnings.setText("$" + playerTwo.totalWinnings);
+    private void evaluatePlayerHand(Player player, String playerName, boolean dealerQualifies) {
+        // Evaluate Pair Plus bet
+        int ppWinnings = ThreeCardLogic.evalPPWinnings(player.hand, player.pairPlusBet);
+        if (ppWinnings > 0) {
+            player.totalWinnings += ppWinnings;
+            updateGameInfo(playerName + " wins Pair Plus: $" + ppWinnings);
         } else {
-            // Player Two folded, loses ante and pair plus bets
-            playerTwo.totalWinnings -= playerTwo.anteBet + playerTwo.pairPlusBet;
-            updateGameInfo("Player Two folded and loses ante and pair plus bets.");
-            playerTwoWinnings.setText("$" + playerTwo.totalWinnings);
+            player.totalWinnings -= player.pairPlusBet;
+            updateGameInfo(playerName + " loses Pair Plus.");
         }
 
-        updateGameInfo("Round has ended. Press 'Continue' to start a new round.");
-    }
-
-    private void resetRound() {
-        // Clear hands and bets
-        playerOne.hand.clear();
-        playerTwo.hand.clear();
-        theDealer.dealersHand.clear();
-
-        playerOneAnteBet.clear();
-        playerOnePairPlusBet.clear();
-        playerTwoAnteBet.clear();
-        playerTwoPairPlusBet.clear();
-
-        playerOneHandPane.getChildren().clear();
-        playerTwoHandPane.getChildren().clear();
-        dealerHandPane.getChildren().clear();
-
-        playerOne.anteBet = 0;
-        playerOne.pairPlusBet = 0;
-        playerOne.playBet = 0;
-
-        playerTwo.anteBet = 0;
-        playerTwo.pairPlusBet = 0;
-        playerTwo.playBet = 0;
-
-        playerOneFolded = false;
-        playerTwoFolded = false;
-        playerOneDecisionMade = false;
-        playerTwoDecisionMade = false;
-
-        // Reset button states
-        placeBetsButtonPlayerOne.setDisable(false);
-        placeBetsButtonPlayerTwo.setDisable(false);
-        dealCardsButton.setDisable(true);
-        playFoldButtonPlayerOne.setDisable(true);
-        playFoldButtonPlayerTwo.setDisable(true);
-        revealDealerButton.setDisable(true);
-        continueButton.setDisable(true);
-
-        currentState = GameState.PLACING_BETS;
-    }
-
-    private boolean bothPlayersPlacedBets() {
-        return playerOne.anteBet > 0 && playerTwo.anteBet > 0;
-    }
-
-    private boolean playerDecisionsMade() {
-        return playerOneDecisionMade && playerTwoDecisionMade;
+        if (dealerQualifies) {
+            int compareResult = ThreeCardLogic.compareHands(theDealer.dealersHand, player.hand);
+            if (compareResult == 2) { // Player wins
+                int winnings = player.anteBet + player.playBet;
+                player.totalWinnings += winnings * 2;
+                updateGameInfo(playerName + " beats dealer and wins: $" + winnings * 2);
+            } else if (compareResult == 1) { // Dealer wins
+                player.totalWinnings -= player.anteBet + player.playBet;
+                updateGameInfo(playerName + " loses to dealer.");
+            } else { // Tie
+                updateGameInfo(playerName + " ties with dealer.");
+            }
+        } else {
+            // Ante bet is pushed
+            updateGameInfo("Dealer does not qualify. " + playerName + "'s play bet is returned.");
+            player.totalWinnings += player.playBet;
+        }
+        if (playerName.equals("Player One")) {
+            playerOneWinnings.setText("$" + player.totalWinnings);
+        } else {
+            playerTwoWinnings.setText("$" + player.totalWinnings);
+        }
     }
 
     private String handToString(ArrayList<Card> hand) {
@@ -494,5 +400,52 @@ public class gameplayController {
             sb.append(cardValue).append(card.getSuit()).append(" ");
         }
         return sb.toString().trim();
+    }
+
+    private void resetRound() {
+        playerOne.hand.clear();
+        playerOneAnteBet.clear();
+        playerOnePairPlusBet.clear();
+        playerOneAnteBet.setDisable(false);
+        playerOnePairPlusBet.setDisable(false);
+        playerOne.anteBet = 0;
+        playerOne.pairPlusBet = 0;
+        playerOne.playBet = 0;
+        playerOneFolded = false;
+        playFoldButtonPlayerOne.setDisable(true);
+        placeBetsButtonPlayerOne.setDisable(false);
+        playerOneHandPane.getChildren().clear();
+
+        if (!isOnePlayerMode) {
+            playerTwo.hand.clear();
+            playerTwoAnteBet.clear();
+            playerTwoPairPlusBet.clear();
+            playerTwoAnteBet.setDisable(false);
+            playerTwoPairPlusBet.setDisable(false);
+            playerTwo.anteBet = 0;
+            playerTwo.pairPlusBet = 0;
+            playerTwo.playBet = 0;
+            playerTwoFolded = false;
+            playFoldButtonPlayerTwo.setDisable(true);
+            placeBetsButtonPlayerTwo.setDisable(false);
+            playerTwoHandPane.getChildren().clear();
+        }
+
+        theDealer.dealersHand.clear();
+        dealerHandPane.getChildren().clear();
+
+        resetButtons();
+    }
+
+    private void resetButtons() {
+        dealCardsButton.setDisable(true);
+        revealDealerButton.setDisable(true);
+        continueButton.setDisable(true);
+        playFoldButtonPlayerOne.setDisable(true);
+        playFoldButtonPlayerTwo.setDisable(true);
+        placeBetsButtonPlayerOne.setDisable(false);
+        if (!isOnePlayerMode) {
+            placeBetsButtonPlayerTwo.setDisable(false);
+        }
     }
 }

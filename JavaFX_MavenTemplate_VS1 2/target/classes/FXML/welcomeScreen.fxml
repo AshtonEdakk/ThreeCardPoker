@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Label?>
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       alignment="CENTER" spacing="20" fx:controller="welcomeController" fx:id="root"
       stylesheets="@lightMode.css">
-
+    <!-- Add Nodes -->
     <Label fx:id="gameName" text="Three Card Poker" styleClass="game-title"/>
-    
     <Button fx:id="playButton" text="Play" onAction="#playPressed" minWidth="100"/>
-
     <MenuButton fx:id="numberOfPlayers" text="Number of Players" minWidth="100">
         <items>
             <MenuItem fx:id="onePlayer" text="1 Player" onAction="#onePlayer"/>
             <MenuItem fx:id="twoPlayers" text="2 Players" onAction="#twoPlayers"/>
         </items>
     </MenuButton>
-
     <Button fx:id="exitButton" text="Exit" onAction="#handleExit" minWidth="100"/>
-    <Button fx:id="styleButon" text="Switch Style" onAction="#handleStyleSwitch" minWidth="100"/>
 </VBox>
