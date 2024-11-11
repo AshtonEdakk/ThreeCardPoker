@@ -1,29 +1,31 @@
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class JavaFXTemplate extends Application {
 
-    public static void main(String[] args) {
-        // Launch the application
-        launch(args);
-    }
-
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         try {
-            // Load the welcome screen
+            // Load welcomeScreen.fxml
             Parent root = FXMLLoader.load(getClass().getResource("/FXML/welcomeScreen.fxml"));
-            primaryStage.setTitle("3 Card Poker");
-            Scene scene = new Scene(root,1500,750);
-            scene.getStylesheets().add("/styles/lightTheme.css");
+            Scene scene = new Scene(root, 1500, 750);
+            
+            // Apply initial stylesheet
+            scene.getStylesheets().add(getClass().getResource("/styles/lightTheme.css").toExternalForm());
+
+            primaryStage.setTitle("Three Card Poker - Welcome");
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch(Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

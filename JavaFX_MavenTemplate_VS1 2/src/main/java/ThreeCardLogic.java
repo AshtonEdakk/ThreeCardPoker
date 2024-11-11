@@ -1,8 +1,17 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Implements the game logic for Three Card Poker.
+ */
 public class ThreeCardLogic {
 
+    /**
+     * Evaluates the hand and returns its ranking.
+     *
+     * @param hand The list of Cards in the hand.
+     * @return An integer representing the hand's rank.
+     */
     public static int evalHand(ArrayList<Card> hand) {
         boolean flush = isFlush(hand);
         boolean straight = isStraight(hand);
@@ -25,6 +34,13 @@ public class ThreeCardLogic {
     }
 
     // Helper methods
+
+    /**
+     * Determines if the hand is a flush.
+     *
+     * @param hand The list of Cards in the hand.
+     * @return True if all cards have the same suit, false otherwise.
+     */
     private static boolean isFlush(ArrayList<Card> hand) {
         char suit = hand.get(0).getSuit();
         for (Card card : hand) {
@@ -35,6 +51,12 @@ public class ThreeCardLogic {
         return true;
     }
 
+    /**
+     * Determines if the hand is a straight.
+     *
+     * @param hand The list of Cards in the hand.
+     * @return True if the hand forms a straight, false otherwise.
+     */
     private static boolean isStraight(ArrayList<Card> hand) {
         ArrayList<Integer> values = new ArrayList<>();
         for (Card card : hand) {
@@ -54,11 +76,23 @@ public class ThreeCardLogic {
         return values.get(0) + 1 == values.get(1) && values.get(1) + 1 == values.get(2);
     }
 
+    /**
+     * Determines if the hand is three of a kind.
+     *
+     * @param hand The list of Cards in the hand.
+     * @return True if all three cards have the same value, false otherwise.
+     */
     private static boolean isThreeOfKind(ArrayList<Card> hand) {
         int value = hand.get(0).getValue();
         return hand.get(1).getValue() == value && hand.get(2).getValue() == value;
     }
 
+    /**
+     * Determines if the hand contains a pair.
+     *
+     * @param hand The list of Cards in the hand.
+     * @return True if any two cards have the same value, false otherwise.
+     */
     private static boolean isPair(ArrayList<Card> hand) {
         int v1 = hand.get(0).getValue();
         int v2 = hand.get(1).getValue();
@@ -66,11 +100,24 @@ public class ThreeCardLogic {
         return v1 == v2 || v1 == v3 || v2 == v3;
     }
     
+    /**
+     * Determines if the dealer qualifies based on their highest card.
+     *
+     * @param hand The dealer's hand.
+     * @return True if the dealer qualifies, false otherwise.
+     */
     public static boolean dealerQualifies(ArrayList<Card> hand) {
         int highestValue = getHighCardValue(hand);
         return highestValue >= 12; // 12 represents Queen
     }
 
+    /**
+     * Evaluates the Pair Plus winnings based on the hand and bet.
+     *
+     * @param hand The player's hand.
+     * @param bet  The pair plus bet amount.
+     * @return The winnings based on the hand ranking.
+     */
     public static int evalPPWinnings(ArrayList<Card> hand, int bet) {
         int handValue = evalHand(hand);
 
@@ -90,6 +137,13 @@ public class ThreeCardLogic {
         }
     }
 
+    /**
+     * Compares the player's hand with the dealer's hand to determine the winner.
+     *
+     * @param dealer  The dealer's hand.
+     * @param player  The player's hand.
+     * @return 2 if player wins, 1 if dealer wins, 0 for a tie.
+     */
     public static int compareHands(ArrayList<Card> dealer, ArrayList<Card> player) {
         int dealerHandValue = evalHand(dealer);
         int playerHandValue = evalHand(player);
@@ -113,6 +167,12 @@ public class ThreeCardLogic {
         }
     }
 
+    /**
+     * Retrieves the highest card value in the hand.
+     *
+     * @param hand The list of Cards in the hand.
+     * @return The highest card value.
+     */
     public static int getHighCardValue(ArrayList<Card> hand) {
         int high = 0;
         for (Card card : hand) {
