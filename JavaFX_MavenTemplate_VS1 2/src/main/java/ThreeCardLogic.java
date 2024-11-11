@@ -38,15 +38,20 @@ public class ThreeCardLogic {
     private static boolean isStraight(ArrayList<Card> hand) {
         ArrayList<Integer> values = new ArrayList<>();
         for (Card card : hand) {
+            int value = card.getValue();
+            values.add(value == 14 ? 1 : value); // Treat Ace as 1 for low straight
+        }
+        Collections.sort(values);
+        if (values.get(0) + 1 == values.get(1) && values.get(1) + 1 == values.get(2)) {
+            return true;
+        }
+        // Check for Ace-high straight (e.g., Q-K-A)
+        values.clear();
+        for (Card card : hand) {
             values.add(card.getValue());
         }
         Collections.sort(values);
-        // Check for Ace, 2, 3 straight
-        if (values.get(0) == 2 && values.get(1) == 3 && values.get(2) == 14) {
-            return true;
-        }
-        return values.get(2) - values.get(0) == 2 && 
-               values.get(1) - values.get(0) == 1;
+        return values.get(0) + 1 == values.get(1) && values.get(1) + 1 == values.get(2);
     }
 
     private static boolean isThreeOfKind(ArrayList<Card> hand) {
@@ -60,7 +65,7 @@ public class ThreeCardLogic {
         int v3 = hand.get(2).getValue();
         return v1 == v2 || v1 == v3 || v2 == v3;
     }
-    
+
     public static int evalPPWinnings(ArrayList<Card> hand, int bet) {
         int handValue = evalHand(hand);
 
@@ -79,7 +84,7 @@ public class ThreeCardLogic {
                 return 0; // No winnings
         }
     }
-    
+
     public static int compareHands(ArrayList<Card> dealer, ArrayList<Card> player) {
         int dealerHandValue = evalHand(dealer);
         int playerHandValue = evalHand(player);
@@ -90,8 +95,8 @@ public class ThreeCardLogic {
             return 1; // Dealer wins
         } else {
             // Hands are of the same type, compare highest cards
-            int playerHighCard = getHighCard(player);
-            int dealerHighCard = getHighCard(dealer);
+            int playerHighCard = getHighCardValue(player);
+            int dealerHighCard = getHighCardValue(dealer);
 
             if (playerHighCard > dealerHighCard) {
                 return 2; // Player wins
@@ -103,17 +108,17 @@ public class ThreeCardLogic {
         }
     }
 
-    private static int getHighCard(ArrayList<Card> hand) {
+    public static int getHighCardValue(ArrayList<Card> hand) {
         int high = 0;
         for (Card card : hand) {
-            if (card.getValue() == 1) {
-                return 14; // Ace is high
+            int value = card.getValue();
+            if (value == 14) { // Ace is high
+                return 14;
             }
-            if (card.getValue() > high) {
-                high = card.getValue();
+            if (value > high) {
+                high = value;
             }
         }
         return high;
     }
-
 }
