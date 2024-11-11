@@ -17,8 +17,8 @@ public class JavaFXTemplate extends Application {
             // Load the welcome screen
             Parent root = FXMLLoader.load(getClass().getResource("/FXML/welcomeScreen.fxml"));
             primaryStage.setTitle("3 Card Poker");
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/styles/lightMode.css").toExternalForm());
+            Scene scene = new Scene(root,1500,750);
+            scene.getStylesheets().add("/styles/lightTheme.css");
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch(Exception e) {

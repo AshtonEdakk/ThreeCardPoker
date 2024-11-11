@@ -22,4 +22,5 @@
     </MenuButton>
 
     <Button fx:id="exitButton" text="Exit" onAction="#handleExit" minWidth="100"/>
+    <Button fx:id="styleButon" text="Switch Style" onAction="#handleStyleSwitch" minWidth="100"/>
 </VBox>

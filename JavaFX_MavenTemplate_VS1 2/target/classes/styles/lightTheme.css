@@ -8,7 +8,9 @@
 	-fx-font-weight: bold;
 	-fx-background-color: palegreen;
 }
-
+.label{
+	-fx-font-size:40px;
+}
 .text-area{
 	-fx-font-size: 14px;
 	-fx-text-fill: black; /* Text color */

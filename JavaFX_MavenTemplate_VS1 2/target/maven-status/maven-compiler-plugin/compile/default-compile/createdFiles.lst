@@ -1,9 +1,8 @@
+ThreeCardLogic.class
+Dealer.class
 gameplayController$GameState.class
-welcomeController.class
+Card.class
 Deck.class
 Player.class
-ThreeCardLogic.class
 JavaFXTemplate.class
-Card.class
-Dealer.class
 gameplayController.class
