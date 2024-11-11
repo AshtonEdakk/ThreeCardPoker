@@ -17,4 +17,5 @@
             <MenuItem fx:id="twoPlayers" text="2 Players" onAction="#twoPlayers" />
         </items>
     </MenuButton>
+    <Button fx:id="exitButton" text="Exit" onAction="#exitPressed" />
 </Vbox>
