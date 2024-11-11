@@ -12,12 +12,11 @@ public class welcomeController {
 
     @FXML
     private void playPressed(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("gameplayScreen.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/gameplayScreen.fxml"));
         Parent root = loader.load();
-        // Optionally pass data to the controller
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("lightMode.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/styles/lightMode.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
@@ -28,12 +27,28 @@ public class welcomeController {
     }
 
     @FXML
-    private void onePlayer(ActionEvent event) {
-        // Implement logic for one player mode
+    private void onePlayer(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/gameplayScreen.fxml"));
+        Parent root = loader.load();
+        gameplayController controller = loader.getController();
+        controller.setOnePlayerMode(); // Set to one player mode
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/styles/lightMode.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
     }
 
     @FXML
-    private void twoPlayers(ActionEvent event) {
-        // Implement logic for two players mode
+    private void twoPlayers(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/gameplayScreen.fxml"));
+        Parent root = loader.load();
+        gameplayController controller = loader.getController();
+        controller.setTwoPlayerMode(); // Set to two player mode
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/styles/lightMode.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
     }
 }
