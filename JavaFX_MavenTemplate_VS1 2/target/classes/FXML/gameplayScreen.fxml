@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gameplayController" stylesheets="@lightTheme.css">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gameplayController"  fx:id="root" stylesheets="@/styles/lightTheme.css">
 
     <!-- Top Menu Bar -->
     <top>
         <MenuBar fx:id="menuBar">
             <Menu text="Options">
                 <MenuItem text="Fresh Start" onAction="#handleFreshStart"/>
-                <MenuItem text="Switch Theme" onAction="#handleNewLook"/>
+                <MenuItem text="New Look" onAction="#handleNewLook"/>
                 <MenuItem text="Exit" onAction="#handleExit"/>
             </Menu>
         </MenuBar>
     </top>
+
 
     <!-- Center Gameplay Area -->
     <center>
