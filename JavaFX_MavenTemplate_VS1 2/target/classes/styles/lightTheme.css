@@ -19,3 +19,59 @@
 .vbox{
 	-fx-background-color: ghostwhite;
 }
+
+/*Zuhayr's version
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #ffffff;
+}
+
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+.text-field {
+    -fx-pref-width: 100px;
+}
+
+.button {
+    -fx-font-size: 14px;
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+}
+
+.button:hover {
+    -fx-background-color: #1976D2;
+}
+
+.text-area {
+    -fx-font-size: 14px;
+    -fx-control-inner-background: #f9f9f9;
+    -fx-text-fill: #333;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5;
+}
+
+.menu-bar {
+    -fx-background-color: #eeeeee;
+}
+
+.hbox {
+    -fx-alignment: center;
+}
+
+.vbox {
+    -fx-padding: 10;
+}
+
+.grid-pane {
+    -fx-padding: 10;
+}*/

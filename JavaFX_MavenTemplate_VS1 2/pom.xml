@@ -3,7 +3,7 @@
   <groupId>CS342Fall2024</groupId>
   <artifactId>FXTemplatePoker</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  
+
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
     <maven.compiler.source>11</maven.compiler.source>
@@ -12,16 +12,16 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <exec.mainClass>JavaFXTemplate</exec.mainClass>
   </properties>
-  
+
  <dependencies>
-   
-    
+
+
     <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
         <version>5.9.1</version>
         <scope>test</scope>
-    </dependency>  
+    </dependency>
  
     <dependency>
       <groupId>org.openjfx</groupId>
@@ -29,15 +29,15 @@
       <version>19.0.2.1</version>
       <scope>compile</scope>
     </dependency>
-    
+
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-fxml</artifactId>
         <version>19.0.2.1</version>
     </dependency>
 
-    
-    
+
+
 </dependencies>
 
 <build>
@@ -47,11 +47,9 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <version>2.22.1</version>
         </plugin>
-        
-	
     </plugins>
 </build>
  
-   
-  
+
+
 </project>

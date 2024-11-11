@@ -1,4 +1,3 @@
-<!--the fxml file for the welcome screeen-->
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Button?>
@@ -50,5 +49,3 @@
 
     <Button fx:id="exitButton" text="Exit" onAction="#handleExit" minWidth="100"/>
 </VBox>-->
-
->>>>>>> 08069128377fa807a74bb78c72f0e2fdbb6fcf63

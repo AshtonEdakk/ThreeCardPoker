@@ -1,11 +1,9 @@
-<<<<<<< HEAD:JavaFX_MavenTemplate_VS1 2/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+gameplayController$GameState.class
 welcomeController.class
 Deck.class
 Player.class
 ThreeCardLogic.class
 JavaFXTemplate.class
-=======
-Deck.class
->>>>>>> 08069128377fa807a74bb78c72f0e2fdbb6fcf63:JavaFX_MavenTemplate_VS1 2/target/maven-status/maven-compiler-plugin/compile/null/createdFiles.lst
 Card.class
 Dealer.class
+gameplayController.class

@@ -1,80 +1,76 @@
 <!--the fxml file for the gameplay screeen-->
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.controllers.gameplayController"
-            stylesheets="@lightTheme.css">
+            fx:controller="gameplayController" stylesheets="@lightMode.css">
+
     <!-- Top Menu Bar -->
     <top>
         <MenuBar>
             <Menu text="Options">
-                <MenuItem text="Exit" onAction="#handleExit"/>
                 <MenuItem text="Fresh Start" onAction="#handleFreshStart"/>
                 <MenuItem text="New Look" onAction="#handleNewLook"/>
+                <MenuItem text="Exit" onAction="#handleExit"/>
             </Menu>
         </MenuBar>
     </top>
 
-    <!-- Center Game Area -->
+    <!-- Center Gameplay Area -->
     <center>
         <GridPane hgap="20" vgap="20" alignment="CENTER">
-            <!-- Dealer Area -->
-            <VBox GridPane.columnSpan="3" alignment="CENTER">
-                <Label text="Dealer's Hand" styleClass="section-label"/>
-                <HBox spacing="10" fx:id="dealerHandPane">
-                    <!-- Dealer cards will be added here dynamically -->
+            <!-- Dealer's Hand -->
+            <VBox alignment="CENTER" GridPane.columnSpan="2">
+                <Label text="Dealer's Hand" styleClass="section-title"/>
+                <HBox fx:id="dealerHandPane" alignment="CENTER" spacing="10">
+                    <!-- Cards will be added dynamically -->
                 </HBox>
             </VBox>
 
-            <!-- Player One Area -->
-            <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER">
-                <Label text="Player One" styleClass="section-label"/>
-                <HBox spacing="10" fx:id="playerOneHandPane">
-                    <!-- Player One's cards -->
+            <!-- Player One's Area -->
+            <VBox alignment="TOP_CENTER" spacing="10" GridPane.rowIndex="1">
+                <Label text="Player One" styleClass="section-title"/>
+                <HBox fx:id="playerOneHandPane" alignment="CENTER" spacing="10">
+                    <!-- Cards will be added dynamically -->
                 </HBox>
-                <!-- Betting Controls -->
-                <HBox spacing="10">
-                    <Label text="Ante Bet:"/>
-                    <TextField fx:id="playerOneAnteBet" promptText="$5 - $25"/>
-                </HBox>
-                <HBox spacing="10">
-                    <Label text="Pair Plus Bet:"/>
-                    <TextField fx:id="playerOnePairPlusBet" promptText="$5 - $25"/>
-                </HBox>
-                <Button text="Place Bets" onAction="#handlePlaceBetsPlayerOne"/>
-                <Label text="Total Winnings:"/>
-                <Label fx:id="playerOneWinnings" text="$0"/>
+                <GridPane hgap="10" vgap="5">
+                    <Label text="Ante Bet:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="playerOneAnteBet" promptText="$5 - $25" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <Label text="Pair Plus Bet:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="playerOnePairPlusBet" promptText="$5 - $25" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <Label text="Total Winnings:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <Label fx:id="playerOneWinnings" text="$0" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                </GridPane>
+                <Button text="Place Bets" onAction="#handlePlaceBetsPlayerOne" minWidth="100"/>
+                <Button text="Play / Fold" onAction="#handlePlayOrFoldPlayerOne" minWidth="100"/>
             </VBox>
 
-            <!-- Game Info Area -->
-            <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" alignment="CENTER">
-                <Label text="Game Information" styleClass="section-label"/>
-                <TextArea fx:id="gameInfoArea" prefRowCount="10" prefColumnCount="20" editable="false"/>
+            <!-- Game Information Area -->
+            <VBox alignment="CENTER" spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                <Label text="Game Information" styleClass="section-title"/>
+                <TextArea fx:id="gameInfoArea" editable="false" wrapText="true" prefWidth="200" prefHeight="300"/>
             </VBox>
 
-            <!-- Player Two Area -->
-            <VBox GridPane.rowIndex="1" GridPane.columnIndex="2" alignment="CENTER">
-                <Label text="Player Two" styleClass="section-label"/>
-                <HBox spacing="10" fx:id="playerTwoHandPane">
-                    <!-- Player Two's cards -->
+            <!-- Player Two's Area -->
+            <VBox alignment="TOP_CENTER" spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="2">
+                <Label text="Player Two" styleClass="section-title"/>
+                <HBox fx:id="playerTwoHandPane" alignment="CENTER" spacing="10">
+                    <!-- Cards will be added dynamically -->
                 </HBox>
-                <!-- Betting Controls -->
-                <HBox spacing="10">
-                    <Label text="Ante Bet:"/>
-                    <TextField fx:id="playerTwoAnteBet" promptText="$5 - $25"/>
-                </HBox>
-                <HBox spacing="10">
-                    <Label text="Pair Plus Bet:"/>
-                    <TextField fx:id="playerTwoPairPlusBet" promptText="$5 - $25"/>
-                </HBox>
-                <Button text="Place Bets" onAction="#handlePlaceBetsPlayerTwo"/>
-                <Label text="Total Winnings:"/>
-                <Label fx:id="playerTwoWinnings" text="$0"/>
+                <GridPane hgap="10" vgap="5">
+                    <Label text="Ante Bet:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="playerTwoAnteBet" promptText="$5 - $25" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <Label text="Pair Plus Bet:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="playerTwoPairPlusBet" promptText="$5 - $25" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <Label text="Total Winnings:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <Label fx:id="playerTwoWinnings" text="$0" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                </GridPane>
+                <Button text="Place Bets" onAction="#handlePlaceBetsPlayerTwo" minWidth="100"/>
+                <Button text="Play / Fold" onAction="#handlePlayOrFoldPlayerTwo" minWidth="100"/>
             </VBox>
         </GridPane>
     </center>
@@ -82,9 +78,9 @@
     <!-- Bottom Control Buttons -->
     <bottom>
         <HBox alignment="CENTER" spacing="20" padding="10">
-            <Button text="Deal Cards" onAction="#handleDealCards"/>
-            <Button text="Play/Fold" onAction="#handlePlayOrFold"/>
-            <Button text="Continue" onAction="#handleContinue"/>
+            <Button text="Deal Cards" onAction="#handleDealCards" minWidth="100"/>
+            <Button text="Reveal Dealer's Hand" onAction="#handleRevealDealerHand" minWidth="150"/>
+            <Button text="Continue" onAction="#handleContinue" minWidth="100"/>
         </HBox>
     </bottom>
 </BorderPane>
