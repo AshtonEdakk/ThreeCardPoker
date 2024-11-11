@@ -1,84 +1,39 @@
-//controller for the welcome screen
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.Node;
+import javafx.application.Platform;
 
+public class welcomeController {
 
+    @FXML
+    private void playPressed(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("gameplayScreen.fxml"));
+        Parent root = loader.load();
+        // Optionally pass data to the controller
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("lightMode.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
+    }
 
-public class welcomeController implements Initializable{
-	
-	@FXML
-	private VBox root;
-	
-	@FXML
-	private BorderPane root2;
-	
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
-        
-	}
-	public void playPressed(ActionEvent e) throws IOException{
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/gameplayScreen.fxml"));
-		Parent root2 = loader.load(); //load view into parent;
-		gameplayController myctr = loader.getController();
-		root2.getStylesheets().add("/styles/lightMode.css");
-		root.getScene().setRoot(root2);
-	}
-	
+    @FXML
+    private void handleExit(ActionEvent event) {
+        Platform.exit();
+    }
+
+    @FXML
+    private void onePlayer(ActionEvent event) {
+        // Implement logic for one player mode
+    }
+
+    @FXML
+    private void twoPlayers(ActionEvent event) {
+        // Implement logic for two players mode
+    }
 }
-
-//Zuhayr's Version
-//import java.io.IOException;
-//import javafx.event.ActionEvent;
-//import javafx.fxml.FXML;
-//import javafx.fxml.FXMLLoader;
-//import javafx.scene.Parent;
-//import javafx.scene.Scene;
-//import javafx.stage.Stage;
-//import javafx.scene.Node;
-//import javafx.application.Platform;
-//
-//public class welcomeController {
-//
-//    @FXML
-//    private void playPressed(ActionEvent event) throws IOException {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("gameplayScreen.fxml"));
-//        Parent root = loader.load();
-//        // Optionally pass data to the controller
-//        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//        Scene scene = new Scene(root);
-//        scene.getStylesheets().add(getClass().getResource("lightMode.css").toExternalForm());
-//        stage.setScene(scene);
-//        stage.show();
-//    }
-//
-//    @FXML
-//    private void handleExit(ActionEvent event) {
-//        Platform.exit();
-//    }
-//
-//    @FXML
-//    private void onePlayer(ActionEvent event) {
-//        // Implement logic for one player mode
-//    }
-//
-//    @FXML
-//    private void twoPlayers(ActionEvent event) {
-//        // Implement logic for two players mode
-//    }
-//}
-
