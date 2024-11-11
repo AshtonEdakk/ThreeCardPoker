@@ -1,3 +1,4 @@
+gameplayController$GameState.class
 welcomeController.class
 Deck.class
 Player.class
