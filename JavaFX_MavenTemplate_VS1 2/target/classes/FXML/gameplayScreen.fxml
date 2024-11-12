@@ -31,7 +31,7 @@
             <!-- Player One's Cards -->
         </HBox>
         <Button fx:id="placeBetsButtonPlayerOne" text="Place Bets" layoutX="50" layoutY="240" onAction="#handlePlaceBetsPlayerOne" minWidth="100"/>
-        <Button fx:id="playFoldButtonPlayerOne" text="Play / Fold" layoutX="160" layoutY="240" onAction="#handlePlayOrFoldPlayerOne" minWidth="100"/>
+        <Button fx:id="playFoldButtonPlayerOne" text="Play / Fold" layoutX="160" layoutY="240" onAction="#handlePlayOrFoldPlayerOne" disable="true" minWidth="100"/>
 
         <!-- Player Two's Area (Initially Hidden for 1 Player Mode) -->
         <Label fx:id="playerTwoLabel" text="Player Two" layoutX="300" layoutY="150" styleClass="section-title" visible="false"/>
@@ -39,15 +39,16 @@
             <!-- Player Two's Cards -->
         </HBox>
         <Button fx:id="placeBetsButtonPlayerTwo" text="Place Bets" layoutX="300" layoutY="240" onAction="#handlePlaceBetsPlayerTwo" minWidth="100" visible="false"/>
-        <Button fx:id="playFoldButtonPlayerTwo" text="Play / Fold" layoutX="410" layoutY="240" onAction="#handlePlayOrFoldPlayerTwo" minWidth="100" visible="false"/>
+        <Button fx:id="playFoldButtonPlayerTwo" text="Play / Fold" layoutX="410" layoutY="240" onAction="#handlePlayOrFoldPlayerTwo" minWidth="100" disable="true" visible="false"/>
 
         <!-- Game Information Area -->
         <TextArea fx:id="gameInfoArea" layoutX="50" layoutY="300" prefWidth="700" prefHeight="200" editable="false" wrapText="true"/>
 
         <!-- Control Buttons at Bottom -->
-        <Button fx:id="dealCardsButton" text="Deal Cards" layoutX="50" layoutY="520" onAction="#handleDealCards" minWidth="100"/>
+        <Button fx:id="dealCardsButton" text="Deal Cards" layoutX="50" layoutY="520" onAction="#handleDealCards" minWidth="100" disable="true"/>
         <Button fx:id="revealDealerButton" text="Reveal Dealer's Hand" layoutX="200" layoutY="520" onAction="#handleRevealDealerHand" minWidth="150" disable="true"/>
         <Button fx:id="continueButton" text="Continue" layoutX="400" layoutY="520" onAction="#handleContinue" minWidth="100" disable="true"/>
+        <Button fx:id="moneyP1" layoutX="600" text=" " layoutY="520" minWidth="100" disable="false"/>
     </children>
 
 </Pane>

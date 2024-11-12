@@ -65,7 +65,7 @@ public class welcomeController {
         }
 
         // Apply selected theme
-        Scene gameplayScene = new Scene(gameplayRoot, 800, 600);
+        Scene gameplayScene = new Scene(gameplayRoot, 1500, 750);
         gameplayScene.getStylesheets().add(getClass().getResource(themes[styleIndex]).toExternalForm());
 
         // Get current stage and set new scene

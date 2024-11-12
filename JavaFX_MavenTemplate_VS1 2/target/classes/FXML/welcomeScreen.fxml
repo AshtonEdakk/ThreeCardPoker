@@ -14,7 +14,7 @@
 
     <children>
         <!-- Game Title -->
-        <Label text="Three Card Poker" layoutX="250" layoutY="50" styleClass="welcome-title"/>
+        <Label text="Three Card Poker" layoutX="590" layoutY="50" styleClass="welcome-title"/>
     
         <!-- Number of Players Selection -->
         <Label text="Select Number of Players:" layoutX="150" layoutY="150" styleClass="label"/>

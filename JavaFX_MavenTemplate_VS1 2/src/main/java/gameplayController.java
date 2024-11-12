@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.control.TextInputDialog;
 
 /**
  * Controller class for the Gameplay Screen.
@@ -32,16 +33,25 @@ public class gameplayController {
     @FXML private Button dealCardsButton;
     @FXML private Button revealDealerButton;
     @FXML private Button continueButton;
-
+    @FXML private Button moneyP1;
+    private static int moneyAmountP1 = 1000;
+        
     // Game Logic Objects
     private Player playerOne;
     private Player playerTwo;
     private Dealer theDealer;
 
-    private boolean isOnePlayerMode = true; // Default to 1-player mode
-    private boolean playerOneFolded = false;
-    private boolean playerTwoFolded = false;
-
+    private static boolean isOnePlayerMode = true; // Default to 1-player mode
+    private static boolean playerOneFolded = false;
+    private static boolean playerTwoFolded = false;
+    private static boolean playerOneBetted = false;
+    private static boolean playerTwoBetted = false;
+    
+    private static int anteBetP1 = 0;
+    private static int pairPlusBetP1 = 0;
+    private static int anteBetP2 = 0;
+    private static int pairPlusBetP2 = 0;
+    
     // Stylesheet Themes
     private int styleIndex = 0;
     private final String[] themes = {
@@ -64,6 +74,7 @@ public class gameplayController {
         // Initialize UI
         updateGameInfo("Welcome to Three Card Poker! Place your bets to start.");
         resetButtons();
+        moneyP1.setText("$" + moneyAmountP1);
     }
 
     /**
@@ -95,25 +106,64 @@ public class gameplayController {
      */
     @FXML
     private void handlePlaceBetsPlayerOne(ActionEvent event) {
-        // Implementation for placing bets by Player One
         try {
-            // For simplicity, using fixed bet values. In a real application, collect these from input fields.
-            int anteBet = 10; // Placeholder value
-            int pairPlusBet = 10; // Placeholder value
+            // Prompt for ante bet
+            TextInputDialog anteDialog = new TextInputDialog();
+            anteDialog.setTitle("Place Ante Bet");
+            anteDialog.setHeaderText("Enter Ante Bet for Player One");
+            anteDialog.setContentText("Enter a value between $5 and $25:");
 
-            if (isValidBet(anteBet) && isValidBet(pairPlusBet)) {
-                playerOne.setAnteBet(anteBet);
-                playerOne.setPairPlusBet(pairPlusBet);
-                updateGameInfo("Player One placed bets: Ante - $" + anteBet + ", Pair Plus - $" + pairPlusBet);
-                // Disable buttons after placing bets
-                placeBetsButtonPlayerOne.setDisable(true);
-            } else {
-                showAlert("Invalid Bet", "Please place bets between $5 and $25.");
+            anteBetP1 = anteDialog.showAndWait()
+                    .map(Integer::parseInt)
+                    .orElseThrow(() -> new IllegalArgumentException("No input provided"));
+
+            // Check if ante bet is valid
+            if (anteBetP1 < 5 || anteBetP1 > 25) {
+                showAlert("Invalid Bet", "Ante bet must be between $5 and $25.");
+                return;
             }
+
+            // Prompt for Pair Plus bet
+            TextInputDialog pairPlusDialog = new TextInputDialog();
+            pairPlusDialog.setTitle("Place Pair Plus Bet");
+            pairPlusDialog.setHeaderText("Enter Pair Plus Bet for Player One");
+            pairPlusDialog.setContentText("Enter a value between $0 and $25:");
+
+            pairPlusBetP1 = pairPlusDialog.showAndWait()
+                    .map(Integer::parseInt)
+                    .orElseThrow(() -> new IllegalArgumentException("No input provided"));
+
+            // Check if Pair Plus bet is valid
+            if (pairPlusBetP1 < 0 || pairPlusBetP1 > 25) {
+                showAlert("Invalid Bet", "Pair Plus bet must be between $0 and $25.");
+                return;
+            }
+
+            // Set bets if both are valid
+            playerOne.setAnteBet(anteBetP1);
+            playerOne.setPairPlusBet(pairPlusBetP1);
+            updateGameInfo("Player One placed bets: Ante - $" + anteBetP1 + ", Pair Plus - $" + pairPlusBetP1);
+
+            // Disable button after placing bets
+            placeBetsButtonPlayerOne.setDisable(true);
+            playerOneBetted = true;
+            
+            moneyAmountP1 -= (anteBetP1 + pairPlusBetP1);
+            moneyP1.setText("$" + moneyAmountP1);
+            if(isOnePlayerMode) {
+            	dealCardsButton.setDisable(false);
+            }
+            else {
+            	if(playerOneBetted && playerTwoBetted){
+            		dealCardsButton.setDisable(false);            	}
+            }
+        } catch (NumberFormatException e) {
+            showAlert("Invalid Input", "Please enter valid numeric values for the bets.");
         } catch (Exception e) {
             showAlert("Error", "An error occurred while placing bets for Player One.");
-        }
+        }        
     }
+
 
     /**
      * Handles the action when Player One decides to play or fold.
@@ -131,9 +181,15 @@ public class gameplayController {
                     updateGameInfo("Player One has folded.");
                 } else {
                     updateGameInfo("Player One chose to play.");
-                    // Proceed with game logic, e.g., revealing hands or comparing with dealer
+                    
+                    moneyAmountP1 -= anteBetP1;
+                    moneyP1.setText("$" + moneyAmountP1);
+                    
+                                        // Proceed with game logic, e.g., revealing hands or comparing with dealer
                 }
                 playFoldButtonPlayerOne.setDisable(true);
+                revealDealerButton.setDisable(false);
+
             }
         } catch (Exception e) {
             showAlert("Error", "An error occurred while processing Player One's decision.");
@@ -159,6 +215,7 @@ public class gameplayController {
                 updateGameInfo("Player Two placed bets: Ante - $" + anteBet + ", Pair Plus - $" + pairPlusBet);
                 // Disable buttons after placing bets
                 placeBetsButtonPlayerTwo.setDisable(true);
+                playerTwoBetted = true;
             } else {
                 showAlert("Invalid Bet", "Please place bets between $5 and $25.");
             }
@@ -211,7 +268,10 @@ public class gameplayController {
 
             updateGameInfo("Cards have been dealt.");
             dealCardsButton.setDisable(true);
-            revealDealerButton.setDisable(false);
+            playFoldButtonPlayerOne.setDisable(false);
+            if (!isOnePlayerMode) {
+            	playFoldButtonPlayerTwo.setDisable(false);
+            }
         } catch (Exception e) {
             showAlert("Error", "An error occurred while dealing cards.");
         }
@@ -228,8 +288,17 @@ public class gameplayController {
         try {
             displayHand(dealerHandPane, theDealer.getHand(), false); // Show dealer's hand
             updateGameInfo("Dealer's hand has been revealed.");
+            
+            int playerOneWinner = ThreeCardLogic.compareHands(theDealer.getHand(), playerOne.getHand());
+            
+            if(!isOnePlayerMode) {
+            	int playerTwoWinner = ThreeCardLogic.compareHands(theDealer.getHand(), playerTwo.getHand());
+            }
+            compareHands(theDealer.getHand(),playerOne.getHand());
+            
             revealDealerButton.setDisable(true);
             continueButton.setDisable(false);
+            
         } catch (Exception e) {
             showAlert("Error", "An error occurred while revealing dealer's hand.");
         }
@@ -247,7 +316,7 @@ public class gameplayController {
             resetRound();
             updateGameInfo("Continuing to the next round.");
             continueButton.setDisable(true);
-            dealCardsButton.setDisable(false);
+            dealCardsButton.setDisable(true);
         } catch (Exception e) {
             showAlert("Error", "An error occurred while continuing the game.");
         }
@@ -439,12 +508,12 @@ public class gameplayController {
      */
     private void resetButtons() {
         placeBetsButtonPlayerOne.setDisable(false);
-        playFoldButtonPlayerOne.setDisable(false);
+        playFoldButtonPlayerOne.setDisable(true);
         if (!isOnePlayerMode) {
             placeBetsButtonPlayerTwo.setDisable(false);
-            playFoldButtonPlayerTwo.setDisable(false);
+            playFoldButtonPlayerTwo.setDisable(true);
         }
-        dealCardsButton.setDisable(false);
+        dealCardsButton.setDisable(true);
         revealDealerButton.setDisable(true);
         continueButton.setDisable(true);
     }
