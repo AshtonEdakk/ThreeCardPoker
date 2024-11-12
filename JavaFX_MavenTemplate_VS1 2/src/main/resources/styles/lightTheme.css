@@ -84,3 +84,21 @@
 .menu-item {
     -fx-font-size: 16px;
 }
+
+
+#title{
+	-fx-font-size: 70px;
+	-fx-padding: 200 0 20 0;
+}
+
+#playButton{
+	-fx-font-size: 35px;
+}
+
+#numPlayers{
+	-fx-padding: 50 0 0 0;
+}
+
+#dealerHandPane{
+	-fx-padding:0 0 50 0;
+}

@@ -1,6 +1,8 @@
 ThreeCardLogic.class
 Dealer.class
+welcomeController.class
 Card.class
 Deck.class
 Player.class
 JavaFXTemplate.class
+gameplayController.class

@@ -6,33 +6,33 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="welcomeController"> 
-
+<Pane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="welcomeController"> 
     <children>
         <!-- Game Title -->
-        <Label text="Three Card Poker" layoutX="590" layoutY="50" styleClass="welcome-title"/>
-    
-        <!-- Number of Players Selection -->
-        <Label text="Select Number of Players:" layoutX="150" layoutY="150" styleClass="label"/>
-        <HBox layoutX="300" layoutY="140" spacing="20">
-            <children>
-                <RadioButton fx:id="onePlayerRadio" text="1 Player" selected="true"/>
-                <RadioButton fx:id="twoPlayersRadio" text="2 Players"/>
-            </children>
-        </HBox>
-    
-        <!-- Play Button -->
-        <Button fx:id="playButton" text="Play" layoutX="250" layoutY="250" onAction="#playPressed" minWidth="100"/>
-    
+        <VBox minWidth="1500" maxWidth="1500" alignment="center">
+	        <Label text="Three Card Poker" fx:id="title"   styleClass="welcome-title"/>
+	        
+	        <!-- Play Button -->
+	        <Button fx:id="playButton" text="Play" onAction="#playPressed" minWidth="200" minHeight="100"/>
+	        
+	    
+	        <!-- Number of Players Selection -->
+	        <Label text="Select Number of Players:" fx:id="numPlayers" styleClass="label"/>
+	        
+	        <HBox spacing="20" alignment="center">
+	                <RadioButton fx:id="onePlayerRadio" text="1 Player" selected="true"/>
+	                <RadioButton fx:id="twoPlayersRadio" text="2 Players"/>
+	        </HBox>
+        </VBox>
         <!-- Exit Button -->
-        <Button fx:id="exitButton" text="Exit" layoutX="250" layoutY="300" onAction="#handleExit" minWidth="100"/>
+        <Button fx:id="exitButton" text="Exit" layoutX="5" layoutY="700" onAction="#handleExit" minWidth="100"/>
     
         <!-- Style Switch Button -->
-        <Button fx:id="styleButton" text="Change Theme" layoutX="250" layoutY="350" onAction="#handleStyleSwitch" minWidth="100"/>
+        <Button fx:id="styleButton" text="Change Theme" layoutX="1330" layoutY="700" onAction="#handleStyleSwitch" minWidth="100"/>
     </children>
 
 </Pane>

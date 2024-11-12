@@ -20,24 +20,34 @@
         </MenuBar>
 
         <!-- Dealer's Hand -->
-        <Label text="Dealer's Hand" layoutX="50" layoutY="40" styleClass="section-title"/>
-        <HBox fx:id="dealerHandPane" layoutX="50" layoutY="70" spacing="10">
-            <!-- Dealer's Cards will be added dynamically -->
-        </HBox>
+        <VBox minWidth="1500" maxWidth="1500" alignment="center">
+	        <Label text="Dealer's Hand" layoutX="700" layoutY="40" styleClass="section-title"/>
+	        <HBox fx:id="dealerHandPane" layoutX="700" layoutY="100" spacing="10" alignment="center">
+	            <!-- Dealer's Cards will be added dynamically -->
+	        </HBox>
+        </VBox>
 
         <!-- Player One's Area -->
-        <Label text="Player One" layoutX="50" layoutY="150" styleClass="section-title"/>
-        <HBox fx:id="playerOneHandPane" layoutX="50" layoutY="180" spacing="10">
-            <!-- Player One's Cards -->
+        <HBox minWidth="1500" maxWidth="1500" alignment="center"  layoutY="250">
+	        <VBox minWidth="1500" maxWidth="1500" alignment="center" layoutY="250">
+		        <Label text="Player One" styleClass="section-title"/>
+		        <HBox fx:id="playerOneHandPane" alignment="center" spacing="10">
+		            <!-- Player One's Cards -->
+		        </HBox>
+	        </VBox>
+	        
         </HBox>
+        <!-- Player Two's Area (Initially Hidden for 1 Player Mode) -->
+	        <VBox minWidth="1500" maxWidth="1500" alignment="center" layoutY="400">
+		        <Label fx:id="playerTwoLabel" text="Player Two" layoutX="300" layoutY="150" styleClass="section-title" visible="false"/>
+		        <HBox fx:id="playerTwoHandPane" layoutX="300" layoutY="180" spacing="10" visible="false">
+		            <!-- Player Two's Cards -->
+		        </HBox>
+	        </VBox>
         <Button fx:id="placeBetsButtonPlayerOne" text="Place Bets" layoutX="50" layoutY="240" onAction="#handlePlaceBetsPlayerOne" minWidth="100"/>
         <Button fx:id="playFoldButtonPlayerOne" text="Play / Fold" layoutX="160" layoutY="240" onAction="#handlePlayOrFoldPlayerOne" disable="true" minWidth="100"/>
 
-        <!-- Player Two's Area (Initially Hidden for 1 Player Mode) -->
-        <Label fx:id="playerTwoLabel" text="Player Two" layoutX="300" layoutY="150" styleClass="section-title" visible="false"/>
-        <HBox fx:id="playerTwoHandPane" layoutX="300" layoutY="180" spacing="10" visible="false">
-            <!-- Player Two's Cards -->
-        </HBox>
+        
         <Button fx:id="placeBetsButtonPlayerTwo" text="Place Bets" layoutX="300" layoutY="240" onAction="#handlePlaceBetsPlayerTwo" minWidth="100" visible="false"/>
         <Button fx:id="playFoldButtonPlayerTwo" text="Play / Fold" layoutX="410" layoutY="240" onAction="#handlePlayOrFoldPlayerTwo" minWidth="100" disable="true" visible="false"/>
 
@@ -49,6 +59,7 @@
         <Button fx:id="revealDealerButton" text="Reveal Dealer's Hand" layoutX="200" layoutY="520" onAction="#handleRevealDealerHand" minWidth="150" disable="true"/>
         <Button fx:id="continueButton" text="Continue" layoutX="400" layoutY="520" onAction="#handleContinue" minWidth="100" disable="true"/>
         <Button fx:id="moneyP1" layoutX="600" text=" " layoutY="520" minWidth="100" disable="false"/>
+        <Button fx:id="moneyP2" layoutX="700" text=" " layoutY="520" minWidth="100" disable="false" visible="false"/>
     </children>
 
 </Pane>

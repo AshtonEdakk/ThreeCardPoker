@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.scene.control.Label;
 
 /**
  * Controller class for the Welcome Screen.
@@ -18,6 +19,7 @@ public class welcomeController {
     @FXML private Button playButton;
     @FXML private Button exitButton;
     @FXML private Button styleButton;
+    @FXML private Label title;
 
     private int styleIndex = 0;
     private final String[] themes = {
