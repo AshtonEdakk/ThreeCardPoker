@@ -33,6 +33,12 @@ public class gameplayController {
     @FXML private Button moneyP1;
     @FXML private Button moneyP2;
 
+<<<<<<< HEAD
+=======
+    private static int moneyAmountP1 = 1000;
+    private static int moneyAmountP2 = 1000;
+
+>>>>>>> 8cb9a18cd734c6be6d15fa3618858097ec88487a
     // Game Logic Objects
     private Player playerOne;
     private Player playerTwo;
@@ -45,8 +51,12 @@ public class gameplayController {
     private static boolean playerTwoBetted = false;
     private static boolean playerOneFoldedOrPlayed = false;
     private static boolean playerTwoFoldedOrPlayed = false;
+<<<<<<< HEAD
     private static int moneyAmountP1 = 1000;
     private static int moneyAmountP2 = 1000;
+=======
+
+>>>>>>> 8cb9a18cd734c6be6d15fa3618858097ec88487a
     private static int anteBetP1 = 0;
     private static int pairPlusBetP1 = 0;
     private static int anteBetP2 = 0;
@@ -160,11 +170,18 @@ public class gameplayController {
             // Disable button after placing bets
             placeBetsButtonPlayerOne.setDisable(true);
             playerOneBetted = true;
+<<<<<<< HEAD
             
             //places the bet
             moneyAmountP1 -= (anteBetP1 + pairPlusBetP1);
             moneyP1.setText("$" + moneyAmountP1);//reflects that in savings
             if (isOnePlayerMode) {//checks if we can move to the next step in the game
+=======
+
+            moneyAmountP1 -= (anteBetP1 + pairPlusBetP1);
+            moneyP1.setText("$" + moneyAmountP1);
+            if (isOnePlayerMode) {
+>>>>>>> 8cb9a18cd734c6be6d15fa3618858097ec88487a
                 dealCardsButton.setDisable(false);
             } else {
                 if (playerOneBetted && playerTwoBetted) {
@@ -194,6 +211,7 @@ public class gameplayController {
                 } else {
                     updateGameInfo("Player One chose to play.");
 
+<<<<<<< HEAD
                     moneyAmountP1 -= anteBetP1;//adds the play wager
                     moneyP1.setText("$" + moneyAmountP1);
                 }
@@ -208,6 +226,17 @@ public class gameplayController {
                 if (playerOneFoldedOrPlayed && (isOnePlayerMode || playerTwoFoldedOrPlayed)) {//moves to the next stage
                     revealDealerButton.setDisable(false);
                 }
+=======
+                    moneyAmountP1 -= anteBetP1;
+                    moneyP1.setText("$" + moneyAmountP1);
+                }
+                playerOneFoldedOrPlayed = true;
+
+                playFoldButtonPlayerOne.setDisable(true);
+                if (playerOneFoldedOrPlayed && (isOnePlayerMode || playerTwoFoldedOrPlayed)) {
+                    revealDealerButton.setDisable(false);
+                }
+>>>>>>> 8cb9a18cd734c6be6d15fa3618858097ec88487a
             }
         } catch (Exception e) {
             showAlert("Error", "An error occurred while processing Player One's decision.");
@@ -270,11 +299,19 @@ public class gameplayController {
             // Disable button after placing bets
             placeBetsButtonPlayerTwo.setDisable(true);
             playerTwoBetted = true;
+<<<<<<< HEAD
 
             moneyAmountP2 -= (anteBetP2 + pairPlusBetP2);//makes bet
             moneyP2.setText("$" + moneyAmountP2);//reflects previous line in visuals
 
             if (playerOneBetted && playerTwoBetted) {//checks if we cna move to the next stage 
+=======
+
+            moneyAmountP2 -= (anteBetP2 + pairPlusBetP2);
+            moneyP2.setText("$" + moneyAmountP2);
+
+            if (playerOneBetted && playerTwoBetted) {
+>>>>>>> 8cb9a18cd734c6be6d15fa3618858097ec88487a
                 dealCardsButton.setDisable(false);
             }
         } catch (NumberFormatException e) {
@@ -292,7 +329,11 @@ public class gameplayController {
     @FXML
     private void handlePlayOrFoldPlayerTwo(ActionEvent event) {
         try {
+<<<<<<< HEAD
             if (!playerTwoFolded) {//checks if folded
+=======
+            if (!playerTwoFolded) {
+>>>>>>> 8cb9a18cd734c6be6d15fa3618858097ec88487a
                 boolean fold = getPlayOrFoldDecision("Player Two");
                 if (fold) {
                     playerTwoFolded = true;
@@ -300,6 +341,7 @@ public class gameplayController {
                 } else {
                     updateGameInfo("Player Two chose to play.");
 
+<<<<<<< HEAD
                     moneyAmountP2 -= anteBetP2;//withdraws play wager
                     moneyP2.setText("$" + moneyAmountP2);
                 }
@@ -314,6 +356,15 @@ public class gameplayController {
                 playFoldButtonPlayerTwo.setDisable(true);
 
                 if (playerOneFoldedOrPlayed && playerTwoFoldedOrPlayed) {//moves to next stage
+=======
+                    moneyAmountP2 -= anteBetP2;
+                    moneyP2.setText("$" + moneyAmountP2);
+                }
+                playerTwoFoldedOrPlayed = true;
+                playFoldButtonPlayerTwo.setDisable(true);
+
+                if (playerOneFoldedOrPlayed && playerTwoFoldedOrPlayed) {
+>>>>>>> 8cb9a18cd734c6be6d15fa3618858097ec88487a
                     revealDealerButton.setDisable(false);
                 }
             }
@@ -697,4 +748,8 @@ public class gameplayController {
         }
     }
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 8cb9a18cd734c6be6d15fa3618858097ec88487a
