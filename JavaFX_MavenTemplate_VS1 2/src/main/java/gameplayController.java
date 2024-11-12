@@ -1,12 +1,14 @@
 import java.io.InputStream;
 import java.util.ArrayList;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 /**
  * Controller class for the Gameplay Screen.
@@ -35,8 +37,10 @@ public class gameplayController {
     @FXML private Button continueButton;
     @FXML private Button moneyP1;
     @FXML private Button moneyP2;
+
     private static int moneyAmountP1 = 1000;
     private static int moneyAmountP2 = 1000;
+
     // Game Logic Objects
     private Player playerOne;
     private Player playerTwo;
@@ -49,12 +53,12 @@ public class gameplayController {
     private static boolean playerTwoBetted = false;
     private static boolean playerOneFoldedOrPlayed = false;
     private static boolean playerTwoFoldedOrPlayed = false;
-    
+
     private static int anteBetP1 = 0;
     private static int pairPlusBetP1 = 0;
     private static int anteBetP2 = 0;
     private static int pairPlusBetP2 = 0;
-    
+
     // Stylesheet Themes
     private int styleIndex = 0;
     private final String[] themes = {
@@ -79,7 +83,6 @@ public class gameplayController {
         resetButtons();
         moneyP1.setText("$" + moneyAmountP1);
         moneyP2.setText("$" + moneyAmountP2);
-
     }
 
     /**
@@ -91,6 +94,7 @@ public class gameplayController {
         playerTwoHandPane.setVisible(false);
         placeBetsButtonPlayerTwo.setVisible(false);
         playFoldButtonPlayerTwo.setVisible(false);
+        moneyP2.setVisible(false);
     }
 
     /**
@@ -153,23 +157,22 @@ public class gameplayController {
             // Disable button after placing bets
             placeBetsButtonPlayerOne.setDisable(true);
             playerOneBetted = true;
-            
+
             moneyAmountP1 -= (anteBetP1 + pairPlusBetP1);
             moneyP1.setText("$" + moneyAmountP1);
-            if(isOnePlayerMode) {
-            	dealCardsButton.setDisable(false);
-            }
-            else {
-            	if(playerOneBetted && playerTwoBetted){
-            		dealCardsButton.setDisable(false);            	}
+            if (isOnePlayerMode) {
+                dealCardsButton.setDisable(false);
+            } else {
+                if (playerOneBetted && playerTwoBetted) {
+                    dealCardsButton.setDisable(false);
+                }
             }
         } catch (NumberFormatException e) {
             showAlert("Invalid Input", "Please enter valid numeric values for the bets.");
         } catch (Exception e) {
             showAlert("Error", "An error occurred while placing bets for Player One.");
-        }        
+        }
     }
-
 
     /**
      * Handles the action when Player One decides to play or fold.
@@ -178,7 +181,6 @@ public class gameplayController {
      */
     @FXML
     private void handlePlayOrFoldPlayerOne(ActionEvent event) {
-        // Implementation for Player One's play or fold decision
         try {
             if (!playerOneFolded) {
                 boolean fold = getPlayOrFoldDecision("Player One");
@@ -187,19 +189,16 @@ public class gameplayController {
                     updateGameInfo("Player One has folded.");
                 } else {
                     updateGameInfo("Player One chose to play.");
-                    
+
                     moneyAmountP1 -= anteBetP1;
                     moneyP1.setText("$" + moneyAmountP1);
-                    
-                                        // Proceed with game logic, e.g., revealing hands or comparing with dealer
                 }
                 playerOneFoldedOrPlayed = true;
-                
+
                 playFoldButtonPlayerOne.setDisable(true);
                 if (playerOneFoldedOrPlayed && (isOnePlayerMode || playerTwoFoldedOrPlayed)) {
                     revealDealerButton.setDisable(false);
                 }
-
             }
         } catch (Exception e) {
             showAlert("Error", "An error occurred while processing Player One's decision.");
@@ -213,11 +212,11 @@ public class gameplayController {
      */
     @FXML
     private void handlePlaceBetsPlayerTwo(ActionEvent event) {
-    	try {
+        try {
             // Prompt for ante bet
             TextInputDialog anteDialog = new TextInputDialog();
             anteDialog.setTitle("Place Ante Bet");
-            anteDialog.setHeaderText("Enter Ante Bet for Player One");
+            anteDialog.setHeaderText("Enter Ante Bet for Player Two");
             anteDialog.setContentText("Enter a value between $5 and $25:");
 
             anteBetP2 = anteDialog.showAndWait()
@@ -233,7 +232,7 @@ public class gameplayController {
             // Prompt for Pair Plus bet
             TextInputDialog pairPlusDialog = new TextInputDialog();
             pairPlusDialog.setTitle("Place Pair Plus Bet");
-            pairPlusDialog.setHeaderText("Enter Pair Plus Bet for Player One");
+            pairPlusDialog.setHeaderText("Enter Pair Plus Bet for Player Two");
             pairPlusDialog.setContentText("Enter a value between $0 and $25:");
 
             pairPlusBetP2 = pairPlusDialog.showAndWait()
@@ -254,18 +253,18 @@ public class gameplayController {
             // Disable button after placing bets
             placeBetsButtonPlayerTwo.setDisable(true);
             playerTwoBetted = true;
-            
+
             moneyAmountP2 -= (anteBetP2 + pairPlusBetP2);
             moneyP2.setText("$" + moneyAmountP2);
 
-            if(playerOneBetted && playerTwoBetted){
-            		dealCardsButton.setDisable(false);
+            if (playerOneBetted && playerTwoBetted) {
+                dealCardsButton.setDisable(false);
             }
         } catch (NumberFormatException e) {
             showAlert("Invalid Input", "Please enter valid numeric values for the bets.");
         } catch (Exception e) {
             showAlert("Error", "An error occurred while placing bets for Player Two.");
-        }        
+        }
     }
 
     /**
@@ -275,8 +274,7 @@ public class gameplayController {
      */
     @FXML
     private void handlePlayOrFoldPlayerTwo(ActionEvent event) {
-        // Implementation for Player Two's play or fold decision
-    	try {
+        try {
             if (!playerTwoFolded) {
                 boolean fold = getPlayOrFoldDecision("Player Two");
                 if (fold) {
@@ -284,19 +282,16 @@ public class gameplayController {
                     updateGameInfo("Player Two has folded.");
                 } else {
                     updateGameInfo("Player Two chose to play.");
-                    
+
                     moneyAmountP2 -= anteBetP2;
                     moneyP2.setText("$" + moneyAmountP2);
-                    
-                                        // Proceed with game logic, e.g., revealing hands or comparing with dealer
                 }
                 playerTwoFoldedOrPlayed = true;
                 playFoldButtonPlayerTwo.setDisable(true);
-                
-                if(playerOneFoldedOrPlayed && playerTwoFoldedOrPlayed) {
-                	revealDealerButton.setDisable(false);
-                }
 
+                if (playerOneFoldedOrPlayed && playerTwoFoldedOrPlayed) {
+                    revealDealerButton.setDisable(false);
+                }
             }
         } catch (Exception e) {
             showAlert("Error", "An error occurred while processing Player Two's decision.");
@@ -310,10 +305,10 @@ public class gameplayController {
      */
     @FXML
     private void handleDealCards(ActionEvent event) {
-        // Implementation for dealing cards
         try {
             theDealer.deal(playerOne, isOnePlayerMode ? null : playerTwo);
 
+            // Display hands with animations
             displayHand(dealerHandPane, theDealer.getHand(), true); // Hidden dealer hand initially
             displayHand(playerOneHandPane, playerOne.getHand(), false);
             if (!isOnePlayerMode) {
@@ -324,7 +319,7 @@ public class gameplayController {
             dealCardsButton.setDisable(true);
             playFoldButtonPlayerOne.setDisable(false);
             if (!isOnePlayerMode) {
-            	playFoldButtonPlayerTwo.setDisable(false);
+                playFoldButtonPlayerTwo.setDisable(false);
             }
         } catch (Exception e) {
             showAlert("Error", "An error occurred while dealing cards.");
@@ -338,71 +333,16 @@ public class gameplayController {
      */
     @FXML
     private void handleRevealDealerHand(ActionEvent event) {
-        // Implementation for revealing dealer's hand
         try {
             displayHand(dealerHandPane, theDealer.getHand(), false); // Show dealer's hand
             updateGameInfo("Dealer's hand has been revealed.");
-            
-            int playerOneWinner = ThreeCardLogic.compareHands(theDealer.getHand(), playerOne.getHand());
-            int playerTwoWinner = ThreeCardLogic.compareHands(theDealer.getHand(), playerOne.getHand());
-            if(!isOnePlayerMode) {
-            	playerTwoWinner = ThreeCardLogic.compareHands(theDealer.getHand(), playerTwo.getHand());
-            }
-            
-            if(!playerOneFolded) {
-	            if(playerOneWinner == 2) {
-	            	updateGameInfo("Player One won against the Dealer.");
-	            	moneyAmountP1 += (4*anteBetP1);
-	            	moneyP1.setText("$"+moneyAmountP1);
-	            }
-	            else if(playerOneWinner == 1) {
-	            	updateGameInfo("Player One lost against the Dealer.");
-	            }
-	            else {
-	            	updateGameInfo("Player One tied the Dealer. Ante and Play Wager returned to player");
-	            	moneyAmountP1 += 2*anteBetP1;
-	            	moneyP1.setText("$"+moneyAmountP1);
-	            }
-            }
-            if(!playerTwoFolded && !isOnePlayerMode) {
-            	if(playerTwoWinner == 2) {
-	            	updateGameInfo("Player Two won against the Dealer.");
-	            	moneyAmountP2 += (4*anteBetP1);
-	            	moneyP2.setText("$"+moneyAmountP2);
-	            }
-	            else if(playerTwoWinner == 1) {
-	            	updateGameInfo("Player Two lost against the Dealer.");
-	            }
-	            else {
-	            	updateGameInfo("Player Two tied the Dealer. Ante returned to player");
-	            	moneyAmountP2 += anteBetP2;
-	            	moneyP2.setText("$"+moneyAmountP2);
-	            }
-            }
-            
-            //checks pairplus
-            if(ThreeCardLogic.evalHand(playerOne.getHand()) != 0) {
-            	updateGameInfo("Player One won the Pair Plus.");
-            	moneyAmountP1 += pairPlusBetP1 + ThreeCardLogic.evalPPWinnings(playerOne.getHand(),pairPlusBetP1);
-            	moneyP1.setText("$"+moneyAmountP1);
-            }
-            else {
-            	updateGameInfo("Player One lost the Pair Plus.");
-            }
-            if(!isOnePlayerMode) {
-	            if(ThreeCardLogic.evalHand(playerTwo.getHand()) != 0) {
-	            	updateGameInfo("Player Two won the Pair Plus.");
-	            	moneyAmountP2 += pairPlusBetP2 + ThreeCardLogic.evalPPWinnings(playerTwo.getHand(),pairPlusBetP2);
-	            	moneyP2.setText("$"+moneyAmountP2);
-	            }
-	            else {
-	            	updateGameInfo("Player Two lost the Pair Plus.");
-	            }
-            }
-            
+
+            // Evaluate and compare hands
+            evaluateHands();
+
             revealDealerButton.setDisable(true);
             continueButton.setDisable(false);
-            
+
         } catch (Exception e) {
             showAlert("Error", "An error occurred while revealing dealer's hand.");
         }
@@ -415,7 +355,6 @@ public class gameplayController {
      */
     @FXML
     private void handleContinue(ActionEvent event) {
-        // Implementation for continuing to the next round
         try {
             resetRound();
             updateGameInfo("Continuing to the next round.");
@@ -433,14 +372,13 @@ public class gameplayController {
      */
     @FXML
     private void handleFreshStart(ActionEvent event) {
-        // Implementation for starting a fresh game
         try {
             resetRound();
             updateGameInfo("Starting a fresh game.");
             moneyAmountP1 = 1000;
             moneyAmountP2 = 1000;
-            moneyP1.setText("$"+moneyAmountP1);
-            moneyP2.setText("$"+moneyAmountP2);
+            moneyP1.setText("$" + moneyAmountP1);
+            moneyP2.setText("$" + moneyAmountP2);
 
         } catch (Exception e) {
             showAlert("Error", "An error occurred while starting a fresh game.");
@@ -454,7 +392,6 @@ public class gameplayController {
      */
     @FXML
     private void handleNewLook(ActionEvent event) {
-        // Implementation for changing the theme/look
         try {
             styleIndex = (styleIndex + 1) % themes.length;
             menuBar.getScene().getStylesheets().clear();
@@ -475,8 +412,6 @@ public class gameplayController {
         // Implementation for exiting the game
         System.exit(0);
     }
-
-    // -------------------- Helper Methods --------------------
 
     /**
      * Validates if the bet amount is within the allowed range.
@@ -532,7 +467,7 @@ public class gameplayController {
     }
 
     /**
-     * Displays the player's or dealer's hand on the specified HBox.
+     * Displays the player's or dealer's hand on the specified HBox with delay and flip animation.
      *
      * @param handPane  The HBox where the hand will be displayed.
      * @param hand      The list of Card objects to display.
@@ -540,25 +475,61 @@ public class gameplayController {
      */
     private void displayHand(HBox handPane, ArrayList<Card> hand, boolean hideCards) {
         handPane.getChildren().clear();
-        for (Card card : hand) {
-            ImageView cardImageView = new ImageView();
-            if (hideCards) {
+        Timeline timeline = new Timeline();
+
+        for (int i = 0; i < hand.size(); i++) {
+            Card card = hand.get(i);
+            final int index = i; // Needed for use inside lambda
+            KeyFrame keyFrame = new KeyFrame(Duration.millis(i * 600), event -> {
+                ImageView cardImageView = new ImageView();
+                cardImageView.setFitWidth(100);
+                cardImageView.setFitHeight(150);
+
+                // Initially show back of the card
                 cardImageView.setImage(new Image(getClass().getResourceAsStream("/cards/back.png")));
-            } else {
-                String imagePath = getCardFileName(card);
-                InputStream is = getClass().getResourceAsStream(imagePath);
-                if (is != null) {
-                    Image cardImage = new Image(is);
-                    cardImageView.setImage(cardImage);
-                } else {
-                    showAlert("Image Not Found", "Card image not found: " + imagePath);
-                    continue; // Skip adding this card image
-                }
-            }
-            cardImageView.setFitWidth(100);
-            cardImageView.setFitHeight(150);
-            handPane.getChildren().add(cardImageView);
+
+                // Add the card to the handPane
+                handPane.getChildren().add(cardImageView);
+
+                // Create flip animation: 0° -> 90°, switch image, 90° -> 0°
+                RotateTransition flipToMid = new RotateTransition(Duration.millis(250), cardImageView);
+                flipToMid.setAxis(Rotate.Y_AXIS);
+                flipToMid.setFromAngle(0);
+                flipToMid.setToAngle(90);
+                flipToMid.setInterpolator(Interpolator.LINEAR);
+
+                flipToMid.setOnFinished(e -> {
+                    // After reaching 90 degrees, change the image
+                    if (hideCards) {
+                        cardImageView.setImage(new Image(getClass().getResourceAsStream("/cards/back.png")));
+                    } else {
+                        String imagePath = getCardFileName(card);
+                        InputStream is = getClass().getResourceAsStream(imagePath);
+                        if (is != null) {
+                            Image cardImage = new Image(is);
+                            cardImageView.setImage(cardImage);
+                        } else {
+                            showAlert("Image Not Found", "Card image not found: " + imagePath);
+                        }
+                    }
+                });
+
+                RotateTransition flipToEnd = new RotateTransition(Duration.millis(250), cardImageView);
+                flipToEnd.setAxis(Rotate.Y_AXIS);
+                flipToEnd.setFromAngle(90);
+                flipToEnd.setToAngle(0);
+                flipToEnd.setInterpolator(Interpolator.LINEAR);
+
+                // Combine the two flip animations into a SequentialTransition
+                SequentialTransition flipAnimation = new SequentialTransition(flipToMid, flipToEnd);
+
+                flipAnimation.play();
+            });
+
+            timeline.getKeyFrames().add(keyFrame);
         }
+
+        timeline.play();
     }
 
     /**
@@ -605,9 +576,6 @@ public class gameplayController {
         // Clear game information area
         gameInfoArea.clear();
 
-        // Update game information
-        //updateGameInfo("New round started. Place your bets.");
-
         // Reset buttons
         resetButtons();
     }
@@ -625,19 +593,84 @@ public class gameplayController {
         dealCardsButton.setDisable(true);
         revealDealerButton.setDisable(true);
         continueButton.setDisable(true);
-        
+
         playerOneFolded = false;
         playerTwoFolded = false;
         playerOneBetted = false;
         playerTwoBetted = false;
         playerOneFoldedOrPlayed = false;
         playerTwoFoldedOrPlayed = false;
-        
+
         anteBetP1 = 0;
         pairPlusBetP1 = 0;
         anteBetP2 = 0;
         pairPlusBetP2 = 0;
     }
 
-    // -------------------- End of Helper Methods --------------------
+    /**
+     * Evaluates the hands and updates the game state accordingly.
+     */
+    private void evaluateHands() {
+        // Evaluate and compare hands
+        int dealerHandValue = ThreeCardLogic.evalHand(theDealer.getHand());
+
+        if (!playerOneFolded) {
+            int playerOneHandValue = ThreeCardLogic.evalHand(playerOne.getHand());
+            int result = ThreeCardLogic.compareHands(theDealer.getHand(), playerOne.getHand());
+            processResultForPlayer("Player One", playerOne, anteBetP1, pairPlusBetP1, result, dealerHandValue, moneyP1);
+        }
+
+        if (!isOnePlayerMode && !playerTwoFolded) {
+            int playerTwoHandValue = ThreeCardLogic.evalHand(playerTwo.getHand());
+            int result = ThreeCardLogic.compareHands(theDealer.getHand(), playerTwo.getHand());
+            processResultForPlayer("Player Two", playerTwo, anteBetP2, pairPlusBetP2, result, dealerHandValue, moneyP2);
+        }
+    }
+
+    /**
+     * Processes the game result for a player.
+     */
+    private void processResultForPlayer(String playerName, Player player, int anteBet, int pairPlusBet, int result, int dealerHandValue, Button moneyButton) {
+        if (ThreeCardLogic.dealerQualifies(theDealer.getHand())) {
+            if (result == 2) {
+                updateGameInfo(playerName + " wins against the Dealer.");
+                int winnings = anteBet * 2; // Ante bet and play bet win
+                if (ThreeCardLogic.evalHand(player.getHand()) == 1) {
+                    winnings += anteBet * 5; // Bonus for straight flush
+                }
+                addMoneyToPlayer(playerName, winnings, moneyButton);
+            } else if (result == 1) {
+                updateGameInfo(playerName + " loses to the Dealer.");
+            } else {
+                updateGameInfo(playerName + " ties with the Dealer. Bets are returned.");
+                addMoneyToPlayer(playerName, anteBet * 2, moneyButton);
+            }
+        } else {
+            updateGameInfo("Dealer does not qualify. " + playerName + " wins Ante bet.");
+            addMoneyToPlayer(playerName, anteBet * 2, moneyButton);
+        }
+
+        // Process Pair Plus bet
+        int ppWinnings = ThreeCardLogic.evalPPWinnings(player.getHand(), pairPlusBet);
+        if (ppWinnings > 0) {
+            updateGameInfo(playerName + " wins the Pair Plus bet.");
+            addMoneyToPlayer(playerName, ppWinnings, moneyButton);
+        } else {
+            updateGameInfo(playerName + " loses the Pair Plus bet.");
+        }
+    }
+
+    /**
+     * Adds money to the player's total and updates the UI.
+     */
+    private void addMoneyToPlayer(String playerName, int amount, Button moneyButton) {
+        if (playerName.equals("Player One")) {
+            moneyAmountP1 += amount;
+            moneyButton.setText("$" + moneyAmountP1);
+        } else if (playerName.equals("Player Two")) {
+            moneyAmountP2 += amount;
+            moneyButton.setText("$" + moneyAmountP2);
+        }
+    }
+
 }
